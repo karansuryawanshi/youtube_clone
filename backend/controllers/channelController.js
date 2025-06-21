@@ -39,6 +39,30 @@ export const createChannel = async (req, res) => {
   }
 };
 
+export const editMyChannel = async (req, res) => {
+  try {
+    const { channelName, description, channelBanner } = req.body;
+
+    const channel = await Channel.findOne({ owner: req.user.id });
+
+    if (!channel) {
+      return res.status(404).json({ message: "Channel not found" });
+    }
+
+    // Update fields if provided
+    if (channelName) channel.channelName = channelName;
+    if (description) channel.description = description;
+    if (channelBanner) channel.channelBanner = channelBanner;
+
+    const updated = await channel.save();
+
+    res.status(200).json(updated);
+  } catch (err) {
+    console.error("Edit Channel Error:", err);
+    res.status(500).json({ message: "Failed to update channel" });
+  }
+};
+
 export const getMyChannel = async (req, res) => {
   console.log("REQ.USER:");
   const userId = req.user.id;

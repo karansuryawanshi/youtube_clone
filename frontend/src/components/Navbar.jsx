@@ -8,6 +8,7 @@ import { useChannel } from "../context/ChannelContext";
 import { useUser } from "../context/UserContext";
 import { useSearch } from "../context/SearchContext";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import YoutubeLogo from "../assets/youtubeLogo.png";
 
@@ -17,11 +18,15 @@ const Navbar = ({ onHamburgerClick }) => {
   const { user } = useUser();
   const { search, setSearch } = useSearch();
   const [userLogo, setUserLogo] = useState("");
+  const [showMenu, setShowMenu] = useState(false);
 
   // setUserLogo(user.username);
   useEffect(() => {
     setUserLogo(user?.username[0]);
   });
+
+  const navigate = useNavigate();
+  const { logout } = useUser();
 
   return (
     <>
@@ -49,12 +54,47 @@ const Navbar = ({ onHamburgerClick }) => {
         </div>
         <div className="my-auto flex gap-4">
           {channel?.message == "Channel not found" && (
-            <BadgePlus className="text-xl" />
+            <Link to="/create-channel">
+              <BadgePlus className="text-xl" />
+            </Link>
           )}
           {userLogo ? (
-            <span className="bg-purple-800 text-amber-50 rounded-full w-8 h-8 pb-1 text-3xl flex items-center justify-center">
-              <Link to="/my-channel">{userLogo}</Link>
-            </span>
+            <div className="relative">
+              {/* Avatar Button */}
+              <button
+                className="bg-purple-800 text-amber-50 rounded-full w-8 h-8 pb-1 text-2xl flex items-center justify-center"
+                onClick={() => setShowMenu((prev) => !prev)}
+              >
+                {userLogo}
+              </button>
+
+              {/* Dropdown Menu */}
+              {showMenu && (
+                <div
+                  className="absolute right-0 mt-2 bg-white shadow-md rounded w-36 z-50"
+                  onClick={(e) => e.stopPropagation()} // prevent menu from closing
+                >
+                  <button
+                    onClick={() => {
+                      navigate("/my-channel");
+                      setShowMenu(false);
+                    }}
+                    className="w-full text-left px-4 py-2 hover:bg-gray-100"
+                  >
+                    My Channel
+                  </button>
+                  <button
+                    onClick={() => {
+                      logout();
+                      setShowMenu(false);
+                    }}
+                    className="w-full text-left px-4 py-2 text-red-600 hover:bg-gray-100"
+                  >
+                    Logout
+                  </button>
+                </div>
+              )}
+            </div>
           ) : (
             <Link
               to="/login"
