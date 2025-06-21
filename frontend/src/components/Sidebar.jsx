@@ -115,7 +115,7 @@ const Sidebar = ({ collapsed }) => {
   } else {
     return (
       <>
-        <div className="left-0 t-0 h-screen overflow-y-auto scrollbar-thin scrollbar-thumb-gray-100 scrollbar-track-gray-100">
+        <div className="bg-white absolute md:relative left-0 t-0 h-screen overflow-y-auto scrollbar-thin scrollbar-thumb-gray-100 scrollbar-track-gray-100">
           <div className="border-b-1 border-neutral-400 py-2">
             {sidebarLinks.map((item, index) => {
               return (

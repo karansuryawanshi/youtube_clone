@@ -5,6 +5,7 @@ const VideoUpload = ({ onUploadSuccess }) => {
   const [formData, setFormData] = useState({
     title: "",
     category: "",
+    description: "",
     video: null,
   });
 
@@ -58,13 +59,20 @@ const VideoUpload = ({ onUploadSuccess }) => {
     const token = localStorage.getItem("token");
     if (!token) return setUploadMessage("⚠️ Please login to upload.");
 
-    if (!formData.title || !formData.category || !formData.video || !imageUrl) {
+    if (
+      !formData.title ||
+      !formData.category ||
+      !formData.description ||
+      !formData.video ||
+      !imageUrl
+    ) {
       return setUploadMessage("⚠️ All fields are required.");
     }
 
     const data = new FormData();
     data.append("title", formData.title);
     data.append("category", formData.category.toLowerCase());
+    data.append("videoDescription", formData.description);
     data.append("thumbnailUrl", imageUrl);
     data.append("video", formData.video); // must match backend: upload.single("video")
 
@@ -82,7 +90,7 @@ const VideoUpload = ({ onUploadSuccess }) => {
       );
 
       setUploadMessage("✅ Video uploaded successfully!");
-      setFormData({ title: "", category: "", video: null });
+      setFormData({ title: "", category: "", description: "", video: null });
       setImageUrl("");
       onUploadSuccess(); // refresh parent video list
     } catch (err) {
@@ -118,6 +126,15 @@ const VideoUpload = ({ onUploadSuccess }) => {
             required
           />
         </div>
+        <textarea
+          name="description"
+          placeholder="Description"
+          value={formData.description}
+          onChange={handleChange}
+          cols={30}
+          rows={3}
+          className="border p-2 rounded"
+        />
 
         <div className="flex flex-col gap-2">
           <label className="text-sm font-medium">Thumbnail Image</label>

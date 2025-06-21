@@ -86,7 +86,7 @@ const Home = () => {
   }
   {
     return (
-      <div className=" w-[-webkit-fill-available]">
+      <div className=" w-[-webkit-fill-available] h-screen overflow-y-scroll scroll-m-0 [scrollbar-width:none]">
         <div className="px-4">
           <ul className="flex gap-6">
             {categories.map((category) => (
@@ -105,7 +105,7 @@ const Home = () => {
           </ul>
         </div>
 
-        <div className="my-6 mx-4">
+        <div className="my-6 mx-auto">
           <section className="flex flex-wrap gap-8 mx-auto">
             {videos.map((item) => {
               return (

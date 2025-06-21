@@ -97,6 +97,7 @@ const MyChannel = () => {
                 }))
               }
             />
+
             <input
               type="text"
               name="description"
@@ -110,19 +111,50 @@ const MyChannel = () => {
                 }))
               }
             />
-            <input
-              type="text"
-              name="channelBanner"
-              placeholder="Banner URL"
-              className="border p-2 rounded w-full mb-4"
-              value={editForm.channelBanner}
-              onChange={(e) =>
-                setEditForm((prev) => ({
-                  ...prev,
-                  channelBanner: e.target.value,
-                }))
-              }
-            />
+
+            {/* 👇 Cloudinary Upload for Banner */}
+            <div className="mb-4">
+              <label className="text-sm block mb-1 font-medium">
+                Upload New Banner Image
+              </label>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={async (e) => {
+                  const file = e.target.files[0];
+                  const formData = new FormData();
+                  formData.append("file", file);
+                  formData.append("upload_preset", "oxqufdxz"); // your unsigned preset
+
+                  try {
+                    const res = await fetch(
+                      "https://api.cloudinary.com/v1_1/dwr7lrgso/image/upload",
+                      {
+                        method: "POST",
+                        body: formData,
+                      }
+                    );
+                    const data = await res.json();
+                    setEditForm((prev) => ({
+                      ...prev,
+                      channelBanner: data.secure_url,
+                    }));
+                  } catch (err) {
+                    console.error("Banner upload failed", err);
+                  }
+                }}
+                className="border p-2 rounded w-full"
+              />
+
+              {/* ✅ Show banner preview */}
+              {editForm.channelBanner && (
+                <img
+                  src={editForm.channelBanner}
+                  alt="Banner Preview"
+                  className="w-full h-28 object-cover rounded mt-2"
+                />
+              )}
+            </div>
 
             <div className="flex justify-end gap-2">
               <button
@@ -143,7 +175,7 @@ const MyChannel = () => {
                         headers: { Authorization: `Bearer ${token}` },
                       }
                     );
-                    await fetchMyVideos(); // Refresh UI
+                    await fetchMyVideos();
                     setShowEditDialog(false);
                   } catch (err) {
                     console.error("Update failed", err);
@@ -156,6 +188,7 @@ const MyChannel = () => {
           </div>
         </div>
       )}
+
       {/* ////////////////////////////////////////////////////////// */}
 
       <div className="p-4">

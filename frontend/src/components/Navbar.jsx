@@ -62,10 +62,10 @@ const Navbar = ({ onHamburgerClick }) => {
             <div className="relative">
               {/* Avatar Button */}
               <button
-                className="bg-purple-800 text-amber-50 rounded-full w-8 h-8 pb-1 text-2xl flex items-center justify-center"
+                className="bg-purple-800 text-amber-50 rounded-full w-8 h-8 text-2xl flex items-center justify-center"
                 onClick={() => setShowMenu((prev) => !prev)}
               >
-                {userLogo}
+                {userLogo?.toUpperCase()}
               </button>
 
               {/* Dropdown Menu */}

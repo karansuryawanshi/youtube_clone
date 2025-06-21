@@ -11,60 +11,6 @@ import { Trash2 } from "lucide-react";
 import { Ellipsis } from "lucide-react";
 import DummySuggession from "../components/DummySuggession";
 
-// const dummyData = [
-//   {
-//     thumbnail:
-//       "https://i.ytimg.com/vi/Y1J9_9-vNcU/hqdefault.jpg?sqp=-oaymwEnCNACELwBSFryq4qpAxkIARUAAIhCGAHYAQHiAQoIGBACGAY4AUAB&rs=AOn4CLAvlGqjh19grGmCslzUsFq4XvrB4A",
-//     title:
-//       "India Claim Thrilling Win! | England v India - Day 5 Highlights | 2nd LV= Insurance Test 2021",
-//     channelName: "England & whales cricket",
-//     views: "57M",
-//     uploaded: "3 years",
-//   },
-//   {
-//     thumbnail:
-//       "https://i.ytimg.com/vi/KdWPGqT5GwE/hqdefault.jpg?sqp=-oaymwEnCNACELwBSFryq4qpAxkIARUAAIhCGAHYAQHiAQoIGBACGAY4AUAB&rs=AOn4CLCPJY1gX1djgrLJtWd75Mrkr3gaUQ",
-//     title: "Mastering HTML Tags for Web Development || Episode - 5",
-//     channelName: "CodeHelp - by Babbar",
-//     views: "596K",
-//     uploaded: "2 years",
-//   },
-//   {
-//     thumbnail:
-//       "https://i.ytimg.com/vi/JgDNFQ2RaLQ/hqdefault.jpg?sqp=-oaymwEnCNACELwBSFryq4qpAxkIARUAAIhCGAHYAQHiAQoIGBACGAY4AUAB&rs=AOn4CLAfepbadY1CtatUH_d22OgkC1Q4-g",
-//     title: "Ed Sheeran - Sapphire (Official Music Video)",
-//     channelName: "Ed Sheeran",
-//     views: "47M",
-//     uploaded: "12 days",
-//   },
-//   {
-//     thumbnail:
-//       "https://i.ytimg.com/vi/4IOJW5-n0_8/hqdefault.jpg?sqp=-oaymwEnCNACELwBSFryq4qpAxkIARUAAIhCGAHYAQHiAQoIGBACGAY4AUAB&rs=AOn4CLCCfSumHiembyTsmMum94bS7NSxjA",
-//     title: "Fake Podcast with Pakistani General | जनाब मक़सद",
-//     channelName: "satish ray",
-//     views: "4.5M",
-//     uploaded: "1 month",
-//   },
-//   {
-//     thumbnail:
-//       "https://i.ytimg.com/vi/1gukvtH_a3I/hqdefault.jpg?sqp=-oaymwFBCNACELwBSFryq4qpAzMIARUAAIhCGAHYAQHiAQoIGBACGAY4AUAB8AEB-AH-CYAC0AWKAgwIABABGBsgTSh_MA8=&rs=AOn4CLC3ZDnb8cs0SeF0QE2hAzMi4gOJwA",
-//     title:
-//       "Chaudhary - Amit Trivedi feat Mame Khan, Coke Studio @ MTV Season 2",
-//     channelName: "Coke Studio India ",
-//     views: "111M",
-//     uploaded: "12 years",
-//   },
-//   {
-//     thumbnail:
-//       "https://i.ytimg.com/vi/ZDW94jpG-L4/hqdefault.jpg?sqp=-oaymwEnCNACELwBSFryq4qpAxkIARUAAIhCGAHYAQHiAQoIGBACGAY4AUAB&rs=AOn4CLCF7oZEFxXeTWON3lr9jGOPzQ6bIw",
-//     title:
-//       "Foreign Secretary Vikram Misri on India-Canada Reset, Envoys to Return",
-//     channelName: "NewX Live",
-//     views: "140M",
-//     uploaded: "2 hours",
-//   },
-// ];
-
 const VideoPlayer = ({}) => {
   const { id } = useParams();
   const [video, setVideo] = useState(null);
@@ -74,10 +20,10 @@ const VideoPlayer = ({}) => {
   const [channelThumbnail, setChannelThumbnail] = useState();
   const [liked, setLiked] = useState(false);
   const [disLiked, setDisLiked] = useState(false);
-  const [viewMore, setViewMore] = useState(true);
   const [commentDetails, setCommentDetails] = useState([]);
-  const [commentLike, setCommentLike] = useState(false);
-  const [commentDislike, setCommentDislike] = useState(false);
+  const [likedComments, setLikedComments] = useState({});
+  const [dislikedComments, setDislikedComments] = useState({});
+
   const [videoDescription, setVideoDescription] = useState(false);
   const [editingCommentId, setEditingCommentId] = useState(null);
   const [editedText, setEditedText] = useState("");
@@ -94,27 +40,57 @@ const VideoPlayer = ({}) => {
   }, [id]);
 
   const handleLike = async () => {
+    if (liked) return; // prevent multiple likes
+
     const token = localStorage.getItem("token");
-    await axios.put(
-      `http://localhost:5000/api/videos/${id}/like`,
-      {},
-      {
-        headers: { Authorization: `Bearer ${token}` },
+
+    try {
+      await axios.put(
+        `http://localhost:5000/api/videos/${id}/like`,
+        {},
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      setVideo((prev) => ({ ...prev, likes: prev.likes + 1 }));
+      setLiked(true);
+
+      if (disLiked) {
+        // undo dislike
+        setVideo((prev) => ({ ...prev, dislikes: prev.dislikes - 1 }));
+        setDisLiked(false);
       }
-    );
-    setVideo((prev) => ({ ...prev, likes: prev.likes + 1 }));
+    } catch (err) {
+      console.error("Like failed", err);
+    }
   };
 
   const handleDislike = async () => {
+    if (disLiked) return; // prevent multiple dislikes
+
     const token = localStorage.getItem("token");
-    await axios.put(
-      `http://localhost:5000/api/videos/${id}/dislike`,
-      {},
-      {
-        headers: { Authorization: `Bearer ${token}` },
+
+    try {
+      await axios.put(
+        `http://localhost:5000/api/videos/${id}/dislike`,
+        {},
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      setVideo((prev) => ({ ...prev, dislikes: prev.dislikes + 1 }));
+      setDisLiked(true);
+
+      if (liked) {
+        // undo like
+        setVideo((prev) => ({ ...prev, likes: prev.likes - 1 }));
+        setLiked(false);
       }
-    );
-    setVideo((prev) => ({ ...prev, dislikes: prev.dislikes + 1 }));
+    } catch (err) {
+      console.error("Dislike failed", err);
+    }
   };
 
   useEffect(() => {
@@ -123,6 +99,7 @@ const VideoPlayer = ({}) => {
       setComments(res.data.comments);
       setChannelId(res.data.channelId);
       setVideoDescription(res.data.videoDescription);
+      console.log(res.data);
     });
   }, [id]);
 
@@ -203,7 +180,7 @@ const VideoPlayer = ({}) => {
 
   if (!video) return <p>Loading...</p>;
 
-  console.log(videoDescription.length);
+  console.log(videoDescription);
 
   return (
     <div className="h-screen overflow-y-scroll flex scroll-m-0 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden my-4">
@@ -239,8 +216,11 @@ const VideoPlayer = ({}) => {
                   }}
                 >
                   <ThumbsUp
-                    className={liked ? "fill-neutral-700" : "fill-none"}
-                  ></ThumbsUp>
+                    className={`w-5 cursor-pointer ${
+                      liked ? "fill-neutral-700" : "fill-none"
+                    }`}
+                    onClick={handleLike}
+                  />
                   <span className="text-lg">{video.likes}</span>
                 </span>
                 <span
@@ -250,8 +230,11 @@ const VideoPlayer = ({}) => {
                   }}
                 >
                   <ThumbsDown
-                    className={disLiked ? "fill-neutral-700" : "fill-none"}
-                  ></ThumbsDown>
+                    className={`w-5 cursor-pointer ${
+                      disLiked ? "fill-neutral-700" : "fill-none"
+                    }`}
+                    onClick={handleDislike}
+                  />
                   <span className="text-lg">{video.dislikes}</span>
                 </span>
               </div>
@@ -281,11 +264,7 @@ const VideoPlayer = ({}) => {
                 <span>11 May 2023</span>
               </p>
               <div className="flex flex-col">
-                {videoDescription.length > 275 ? (
-                  <p>{videoDescription.slice(0, 275)}</p>
-                ) : (
-                  <p>{videoDescription}</p>
-                )}
+                {videoDescription && <p>{videoDescription.slice(0, 275)}</p>}
               </div>
             </div>
             <CommentBox
@@ -358,16 +337,27 @@ const VideoPlayer = ({}) => {
 
                     <div className="flex gap-2">
                       <ThumbsUp
-                        className={`w-5 ${commentLike ? "fill-black" : ""}`}
-                        onClick={() => {
-                          setCommentLike(!commentLike);
-                        }}
+                        className={`w-5 cursor-pointer ${
+                          likedComments[c._id] ? "fill-black" : ""
+                        }`}
+                        onClick={() =>
+                          setLikedComments((prev) => ({
+                            ...prev,
+                            [c._id]: !prev[c._id],
+                          }))
+                        }
                       />
+
                       <ThumbsDown
-                        className={`w-5 ${commentDislike ? "fill-black" : ""}`}
-                        onClick={() => {
-                          setCommentDislike(!commentDislike);
-                        }}
+                        className={`w-5 cursor-pointer ${
+                          dislikedComments[c._id] ? "fill-black" : ""
+                        }`}
+                        onClick={() =>
+                          setDislikedComments((prev) => ({
+                            ...prev,
+                            [c._id]: !prev[c._id],
+                          }))
+                        }
                       />
                     </div>
                   </div>
