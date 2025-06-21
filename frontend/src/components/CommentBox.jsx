@@ -19,6 +19,8 @@ const CommentBox = ({ videoId, onCommentAdded, commentDetails }) => {
       }
     );
 
+    console.log("[res.data in commentBox]", res.data);
+
     setText("");
     onCommentAdded(res.data);
   };

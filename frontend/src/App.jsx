@@ -1,7 +1,3 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Home from "./pages/Home";
-import VideoPlayer from "./pages/VideoPlayer";
-import MyChannel from "./pages/MyChannel";
 import Navbar from "./components/navbar";
 import { Outlet } from "react-router-dom";
 import Sidebar from "./components/Sidebar";
@@ -14,10 +10,7 @@ function App() {
     <>
       <Navbar onHamburgerClick={() => setSidebarCollapsed((prev) => !prev)} />
       <div className="flex">
-        {/* <Sidebar collapsed={sidebarCollapsed}></Sidebar> */}
-        {/* <div className="overflow-y-scroll h-full"> */}
-        <Sidebar collapsed={sidebarCollapsed} />
-        {/* </div> */}
+        <Sidebar collapsed={sidebarCollapsed} className="w-58" />
         <Outlet context={{ sidebarCollapsed }} />
       </div>
     </>

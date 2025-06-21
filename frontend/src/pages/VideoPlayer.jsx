@@ -3,68 +3,67 @@ import axios from "axios";
 import { useParams } from "react-router-dom";
 import CommentBox from "../components/CommentBox";
 import { jwtDecode } from "jwt-decode";
-import { Dot } from "lucide-react";
 import { useOutletContext } from "react-router-dom";
 import { ThumbsUp, ThumbsDown } from "lucide-react";
 import { Share, Download } from "lucide-react";
-import { Edit } from "lucide-react";
-import { DeleteIcon } from "lucide-react";
+import { Pencil } from "lucide-react";
+import { Trash2 } from "lucide-react";
 import { Ellipsis } from "lucide-react";
-// import { ThumbsUp, ThumbsDown } from "lucide-react";
+import DummySuggession from "../components/DummySuggession";
 
-const dummyData = [
-  {
-    thumbnail:
-      "https://i.ytimg.com/vi/Y1J9_9-vNcU/hqdefault.jpg?sqp=-oaymwEnCNACELwBSFryq4qpAxkIARUAAIhCGAHYAQHiAQoIGBACGAY4AUAB&rs=AOn4CLAvlGqjh19grGmCslzUsFq4XvrB4A",
-    title:
-      "India Claim Thrilling Win! | England v India - Day 5 Highlights | 2nd LV= Insurance Test 2021",
-    channelName: "England & whales cricket boards",
-    views: "57M",
-    uploaded: "3 years",
-  },
-  {
-    thumbnail:
-      "https://i.ytimg.com/vi/KdWPGqT5GwE/hqdefault.jpg?sqp=-oaymwEnCNACELwBSFryq4qpAxkIARUAAIhCGAHYAQHiAQoIGBACGAY4AUAB&rs=AOn4CLCPJY1gX1djgrLJtWd75Mrkr3gaUQ",
-    title: "Mastering HTML Tags for Web Development || Episode - 5",
-    channelName: "CodeHelp - by Babbar",
-    views: "596K",
-    uploaded: "2 years",
-  },
-  {
-    thumbnail:
-      "https://i.ytimg.com/vi/JgDNFQ2RaLQ/hqdefault.jpg?sqp=-oaymwEnCNACELwBSFryq4qpAxkIARUAAIhCGAHYAQHiAQoIGBACGAY4AUAB&rs=AOn4CLAfepbadY1CtatUH_d22OgkC1Q4-g",
-    title: "Ed Sheeran - Sapphire (Official Music Video)",
-    channelName: "Ed Sheeran",
-    views: "47M",
-    uploaded: "12 days",
-  },
-  {
-    thumbnail:
-      "https://i.ytimg.com/vi/4IOJW5-n0_8/hqdefault.jpg?sqp=-oaymwEnCNACELwBSFryq4qpAxkIARUAAIhCGAHYAQHiAQoIGBACGAY4AUAB&rs=AOn4CLCCfSumHiembyTsmMum94bS7NSxjA",
-    title: "Fake Podcast with Pakistani General | जनाब मक़सद",
-    channelName: "satish ray",
-    views: "4.5M",
-    uploaded: "1 month",
-  },
-  {
-    thumbnail:
-      "https://i.ytimg.com/vi/1gukvtH_a3I/hqdefault.jpg?sqp=-oaymwFBCNACELwBSFryq4qpAzMIARUAAIhCGAHYAQHiAQoIGBACGAY4AUAB8AEB-AH-CYAC0AWKAgwIABABGBsgTSh_MA8=&rs=AOn4CLC3ZDnb8cs0SeF0QE2hAzMi4gOJwA",
-    title:
-      "Chaudhary - Amit Trivedi feat Mame Khan, Coke Studio @ MTV Season 2",
-    channelName: "Coke Studio India ",
-    views: "111M",
-    uploaded: "12 years",
-  },
-  {
-    thumbnail:
-      "https://i.ytimg.com/vi/ZDW94jpG-L4/hqdefault.jpg?sqp=-oaymwEnCNACELwBSFryq4qpAxkIARUAAIhCGAHYAQHiAQoIGBACGAY4AUAB&rs=AOn4CLCF7oZEFxXeTWON3lr9jGOPzQ6bIw",
-    title:
-      "Foreign Secretary Vikram Misri on India-Canada Reset, Envoys to Return",
-    channelName: "NewX Live",
-    views: "140M",
-    uploaded: "2 hours",
-  },
-];
+// const dummyData = [
+//   {
+//     thumbnail:
+//       "https://i.ytimg.com/vi/Y1J9_9-vNcU/hqdefault.jpg?sqp=-oaymwEnCNACELwBSFryq4qpAxkIARUAAIhCGAHYAQHiAQoIGBACGAY4AUAB&rs=AOn4CLAvlGqjh19grGmCslzUsFq4XvrB4A",
+//     title:
+//       "India Claim Thrilling Win! | England v India - Day 5 Highlights | 2nd LV= Insurance Test 2021",
+//     channelName: "England & whales cricket",
+//     views: "57M",
+//     uploaded: "3 years",
+//   },
+//   {
+//     thumbnail:
+//       "https://i.ytimg.com/vi/KdWPGqT5GwE/hqdefault.jpg?sqp=-oaymwEnCNACELwBSFryq4qpAxkIARUAAIhCGAHYAQHiAQoIGBACGAY4AUAB&rs=AOn4CLCPJY1gX1djgrLJtWd75Mrkr3gaUQ",
+//     title: "Mastering HTML Tags for Web Development || Episode - 5",
+//     channelName: "CodeHelp - by Babbar",
+//     views: "596K",
+//     uploaded: "2 years",
+//   },
+//   {
+//     thumbnail:
+//       "https://i.ytimg.com/vi/JgDNFQ2RaLQ/hqdefault.jpg?sqp=-oaymwEnCNACELwBSFryq4qpAxkIARUAAIhCGAHYAQHiAQoIGBACGAY4AUAB&rs=AOn4CLAfepbadY1CtatUH_d22OgkC1Q4-g",
+//     title: "Ed Sheeran - Sapphire (Official Music Video)",
+//     channelName: "Ed Sheeran",
+//     views: "47M",
+//     uploaded: "12 days",
+//   },
+//   {
+//     thumbnail:
+//       "https://i.ytimg.com/vi/4IOJW5-n0_8/hqdefault.jpg?sqp=-oaymwEnCNACELwBSFryq4qpAxkIARUAAIhCGAHYAQHiAQoIGBACGAY4AUAB&rs=AOn4CLCCfSumHiembyTsmMum94bS7NSxjA",
+//     title: "Fake Podcast with Pakistani General | जनाब मक़सद",
+//     channelName: "satish ray",
+//     views: "4.5M",
+//     uploaded: "1 month",
+//   },
+//   {
+//     thumbnail:
+//       "https://i.ytimg.com/vi/1gukvtH_a3I/hqdefault.jpg?sqp=-oaymwFBCNACELwBSFryq4qpAzMIARUAAIhCGAHYAQHiAQoIGBACGAY4AUAB8AEB-AH-CYAC0AWKAgwIABABGBsgTSh_MA8=&rs=AOn4CLC3ZDnb8cs0SeF0QE2hAzMi4gOJwA",
+//     title:
+//       "Chaudhary - Amit Trivedi feat Mame Khan, Coke Studio @ MTV Season 2",
+//     channelName: "Coke Studio India ",
+//     views: "111M",
+//     uploaded: "12 years",
+//   },
+//   {
+//     thumbnail:
+//       "https://i.ytimg.com/vi/ZDW94jpG-L4/hqdefault.jpg?sqp=-oaymwEnCNACELwBSFryq4qpAxkIARUAAIhCGAHYAQHiAQoIGBACGAY4AUAB&rs=AOn4CLCF7oZEFxXeTWON3lr9jGOPzQ6bIw",
+//     title:
+//       "Foreign Secretary Vikram Misri on India-Canada Reset, Envoys to Return",
+//     channelName: "NewX Live",
+//     views: "140M",
+//     uploaded: "2 hours",
+//   },
+// ];
 
 const VideoPlayer = ({}) => {
   const { id } = useParams();
@@ -80,6 +79,8 @@ const VideoPlayer = ({}) => {
   const [commentLike, setCommentLike] = useState(false);
   const [commentDislike, setCommentDislike] = useState(false);
   const [videoDescription, setVideoDescription] = useState(false);
+  const [editingCommentId, setEditingCommentId] = useState(null);
+  const [editedText, setEditedText] = useState("");
 
   const { sidebarCollapsed } = useOutletContext();
 
@@ -91,16 +92,6 @@ const VideoPlayer = ({}) => {
       .then((res) => setVideo(res.data))
       .catch((err) => console.log(err));
   }, [id]);
-
-  // const handleLike = async () => {
-  //   const token = localStorage.getItem("token");
-  //   await axios.put(`http://localhost:5000/api/videos/${id}/like`, {
-  //     headers: { Authorization: `Bearer ${token}` },
-  //     credentials: true,
-  //     allowedHeaders: ["Content-Type", "Authorization"],
-  //   });
-  //   setVideo((prev) => ({ ...prev, likes: prev.likes + 1 }));
-  // };
 
   const handleLike = async () => {
     const token = localStorage.getItem("token");
@@ -171,6 +162,35 @@ const VideoPlayer = ({}) => {
     userId = decoded.id;
   }
 
+  const handleSaveEdit = async (commentId) => {
+    const token = localStorage.getItem("token");
+    if (!token || !editedText.trim()) return;
+
+    try {
+      const res = await axios.put(
+        `http://localhost:5000/api/comments/${commentId}`,
+        { text: editedText },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      // Update the comment in UI
+      setComments((prev) =>
+        prev.map((c) =>
+          c._id === commentId ? { ...c, text: res.data.comment.text } : c
+        )
+      );
+
+      setEditingCommentId(null);
+      setEditedText("");
+    } catch (err) {
+      console.error("Failed to update comment", err);
+    }
+  };
+
   const handleLikeChange = () => {
     setLiked(!liked);
     handleLike();
@@ -186,7 +206,7 @@ const VideoPlayer = ({}) => {
   console.log(videoDescription.length);
 
   return (
-    <>
+    <div className="h-screen overflow-y-scroll flex scroll-m-0 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden my-4">
       <div className="flex ">
         <div className="p-4">
           <video
@@ -207,7 +227,7 @@ const VideoPlayer = ({}) => {
               <p className=" font-semibold">{channelName}</p>
               <p className="font-light text-sm">2.4k subscribers</p>
             </div>
-            <div className="flex items-center bg-black rounded-full my-2 px-4 py-1 text-white mx-6">
+            <div className="flex items-center bg-black hover:bg-neutral-800 duration-300 rounded-full my-2 px-4 py-1 text-white mx-6">
               <button>Subscribe</button>
             </div>
             <div className="flex gap-4 mx-auto">
@@ -283,27 +303,55 @@ const VideoPlayer = ({}) => {
                     className="flex flex-col gap-2 bg-neutral-200 rounded-lg p-2"
                   >
                     <div className="flex justify-between">
-                      <div className="">
+                      <div>
                         <div className="flex gap-10 items-center">
                           <p>@{c.userId.username}</p>
                           <small className="text-xs">
                             {new Date(c.timestamp).toLocaleString()}
                           </small>
                         </div>
-                        <p className="">{c.text}</p>
+
+                        {editingCommentId === c._id ? (
+                          <div className="flex gap-2 mt-2">
+                            <input
+                              type="text"
+                              value={editedText}
+                              onChange={(e) => setEditedText(e.target.value)}
+                              className="border p-1 rounded w-64"
+                            />
+                            <button
+                              onClick={() => handleSaveEdit(c._id)}
+                              className="text-blue-600 text-sm"
+                            >
+                              Save
+                            </button>
+                            <button
+                              onClick={() => setEditingCommentId(null)}
+                              className="text-gray-500 text-sm"
+                            >
+                              Cancel
+                            </button>
+                          </div>
+                        ) : (
+                          <p>{c.text}</p>
+                        )}
                       </div>
+
                       <div>
                         <button
                           onClick={() => handleDeleteComment(c._id)}
-                          className="text-red-500 text-sm ml-2"
+                          className="text-red-400 text-sm ml-2"
                         >
-                          <DeleteIcon></DeleteIcon>
+                          <Trash2 />
                         </button>
                         <button
-                          onClick={() => handleDeleteComment(c._id)}
-                          className="text-neutral-800 text-sm ml-2"
+                          onClick={() => {
+                            setEditingCommentId(c._id);
+                            setEditedText(c.text);
+                          }}
+                          className="text-neutral-700 text-sm ml-2"
                         >
-                          <Edit />
+                          <Pencil />
                         </button>
                       </div>
                     </div>
@@ -330,40 +378,9 @@ const VideoPlayer = ({}) => {
         </div>
       </div>
       <div className="w-[25em] mt-4 mx-2">
-        <section className="flex flex-col gap-3 ">
-          {dummyData.map((item) => {
-            return (
-              <article className="flex">
-                <img
-                  className="w-[17rem] h-[6rem] mr-2 rounded-lg"
-                  src={item.thumbnail}
-                  alt=""
-                />
-                <div className="text-sm">
-                  {item.title.length > 52 ? (
-                    <p className="mb-1">{item.title.slice(0, 45)}...</p>
-                  ) : (
-                    <p className="mb-1">{item.title}</p>
-                  )}
-                  <p className="mb-1 text-neutral-600 hover:text-neutral-800 duration-300 cursor-pointer">
-                    {item.channelName}
-                  </p>
-                  <div className="flex">
-                    <span className="text-neutral-600">{item.views} Views</span>
-                    <span>
-                      <Dot className="text-neutral-600"></Dot>
-                    </span>
-                    <span className="text-neutral-600">
-                      {item.uploaded} ago
-                    </span>
-                  </div>
-                </div>
-              </article>
-            );
-          })}
-        </section>
+        <DummySuggession></DummySuggession>
       </div>
-    </>
+    </div>
   );
 };
 

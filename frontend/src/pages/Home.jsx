@@ -36,25 +36,6 @@ const Home = () => {
 
   const navigate = useNavigate();
 
-  // useEffect(() => {
-  //   const fetchVideos = async () => {
-  //     const categoryQuery = selected === "All" ? "" : selected.toLowerCase();
-  //     try {
-  //       const res = await axios.get("http://localhost:5000/api/videos", {
-  //         params: {
-  //           search,
-  //           category: categoryQuery,
-  //         },
-  //       });
-  //       setVideos(res.data);
-  //     } catch (err) {
-  //       console.error("Error fetching videos", err);
-  //     }
-  //   };
-
-  //   fetchVideos();
-  // }, [search, selected]);
-
   useEffect(() => {
     const fetchVideos = async () => {
       const categoryQuery =
@@ -80,22 +61,24 @@ const Home = () => {
 
   if (!user) {
     return (
-      <div className="w-11/12 lg:w-[130rem] flex flex-col items-center justify-center">
-        <div className="h-screen flex flex-col items-center justify-center text-center px-4">
-          <div className="bg-neutral-200 p-4 rounded-xl">
-            <div className="text-4xl font-semibold mb-4">
-              You're not signed in
+      <div className="w-[-webkit-fill-available] flex items-center justify-center">
+        <div className="w-auto flex flex-col items-center justify-center">
+          <div className="px-4">
+            <div className="bg-neutral-200 p-4 rounded-xl">
+              <div className="text-4xl font-semibold mb-4">
+                You're not signed in
+              </div>
+              <p className="text-gray-600 text-lg mb-6">
+                Sign in to like videos, comment, and subscribe.
+              </p>
+              <Link
+                to="/login"
+                className="flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-lg text-lg font-medium transition"
+              >
+                <LogIn className="w-6 h-6" />
+                Sign In
+              </Link>
             </div>
-            <p className="text-gray-600 text-lg mb-6">
-              Sign in to like videos, comment, and subscribe.
-            </p>
-            <Link
-              to="/login"
-              className="flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-lg text-lg font-medium transition"
-            >
-              <LogIn className="w-6 h-6" />
-              Sign In
-            </Link>
           </div>
         </div>
       </div>
@@ -103,7 +86,7 @@ const Home = () => {
   }
   {
     return (
-      <div>
+      <div className=" w-[-webkit-fill-available]">
         <div className="px-4">
           <ul className="flex gap-6">
             {categories.map((category) => (
@@ -122,7 +105,7 @@ const Home = () => {
           </ul>
         </div>
 
-        <div className="my-6 mx-4 w-11/12">
+        <div className="my-6 mx-4">
           <section className="flex flex-wrap gap-8 mx-auto">
             {videos.map((item) => {
               return (
@@ -130,7 +113,7 @@ const Home = () => {
                   onClick={() => {
                     navigate(`/videos/${item._id}`);
                   }}
-                  className="w-[22rem] rounded-lg overflow-hidden bg-neutral-100 p-1 hover:scale-105 duration-300"
+                  className="w-[20rem] rounded-lg overflow-hidden bg-neutral-100 p-1 hover:scale-105 duration-300"
                 >
                   <img
                     src={item.thumbnailUrl}

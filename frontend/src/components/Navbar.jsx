@@ -53,11 +53,14 @@ const Navbar = ({ onHamburgerClick }) => {
           )}
           {userLogo ? (
             <span className="bg-purple-800 text-amber-50 rounded-full w-8 h-8 pb-1 text-3xl flex items-center justify-center">
-              {userLogo}
+              <Link to="/my-channel">{userLogo}</Link>
             </span>
           ) : (
-            <Link to="/login" className="flex">
-              <User className="cursor-pointer"></User>
+            <Link
+              to="/login"
+              className="flex border-1 border-neutral-500 px-2 py-1 rounded-full"
+            >
+              <User className="cursor-pointer text-blue-500"></User>
               <span className="text-blue-500 cursor-pointer">Sign up</span>
             </Link>
           )}

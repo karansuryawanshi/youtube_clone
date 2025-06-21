@@ -41,7 +41,7 @@ const CreateChannel = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto p-6 bg-white shadow rounded">
+    <div className="max-w-md mx-auto p-6 bg-white rounded">
       <h2 className="text-2xl font-bold mb-4">Create Your Channel</h2>
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <input
