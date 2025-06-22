@@ -58,10 +58,10 @@ const dummyData = [
 const DummySuggession = () => {
   return (
     <>
-      <section className="flex flex-col gap-3 ">
+      <section className="grid grid-cols-1 gap-4 lg:grid-cols-2 xl:grid-cols-1">
         {dummyData.map((item) => {
           return (
-            <article className="flex">
+            <article className="flex flex-col sm:flex-row">
               <img
                 className="w-[17rem] h-[6rem] mr-2 rounded-lg"
                 src={item.thumbnail}

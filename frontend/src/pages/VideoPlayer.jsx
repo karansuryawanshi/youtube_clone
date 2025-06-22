@@ -183,34 +183,34 @@ const VideoPlayer = ({}) => {
   console.log(videoDescription);
 
   return (
-    <div className="h-screen overflow-y-scroll flex scroll-m-0 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden my-4">
-      <div className="flex ">
+    <div className="h-screen w-screen grid grid-cols-1 xl:grid-cols-[70%_30%] mx-2 overflow-x-hidden overflow-y-scroll scroll-m-0 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden my-4">
+      <div className="flex w-100%">
         <div className="p-4">
           <video
-            className={`rounded-lg p-4 ${
-              sidebarCollapsed ? "min-w-[65rem]" : "min-w-[55rem]"
-            }`}
+            className={`rounded-lg p-4 w-screen`}
             controls
             src={`http://localhost:5000${video.videoUrl}`}
           />
           <h2 className="text-xl font-bold mt-2">{video.title}</h2>
-          <div className="flex gap-4 my-4">
-            <img
-              src={channelThumbnail}
-              alt="channel thumbnail"
-              className="w-12 rounded-full"
-            />
-            <div>
-              <p className=" font-semibold">{channelName}</p>
-              <p className="font-light text-sm">2.4k subscribers</p>
+          <div className="flex flex-wrap gap-2 my-4">
+            <div className="flex gap-2">
+              <img
+                src={channelThumbnail}
+                alt="channel thumbnail"
+                className="w-auto h-8 sm:h-12 rounded-full"
+              />
+              <div>
+                <p className=" font-semibold">{channelName}</p>
+                <p className="font-light text-sm">2.4k subscribers</p>
+              </div>
+              <div className="flex items-center bg-black hover:bg-neutral-800 duration-300 rounded-full my-2 px-2 sm:px-4 text-white ml-2">
+                <button>Subscribe</button>
+              </div>
             </div>
-            <div className="flex items-center bg-black hover:bg-neutral-800 duration-300 rounded-full my-2 px-4 py-1 text-white mx-6">
-              <button>Subscribe</button>
-            </div>
-            <div className="flex gap-4 mx-auto">
+            <div className="flex gap-2 mx-auto">
               <div className="flex ">
                 <span
-                  className=" px-4 flex border-r items-center justify-center my-2 rounded-l-lg gap-1 bg-neutral-200"
+                  className=" px-2 sm:px-4 flex border-r items-center justify-center my-2 rounded-l-lg gap-1 bg-neutral-200"
                   onClick={() => {
                     handleLikeChange();
                   }}
@@ -221,10 +221,10 @@ const VideoPlayer = ({}) => {
                     }`}
                     onClick={handleLike}
                   />
-                  <span className="text-lg">{video.likes}</span>
+                  <span className="text-sm md:text-lg">{video.likes}</span>
                 </span>
                 <span
-                  className=" px-4 flex items-center my-2 rounded-r-lg justify-center gap-1 bg-neutral-200"
+                  className=" px-2 sm:px-4 flex items-center my-2 rounded-r-lg justify-center gap-1 bg-neutral-200"
                   onClick={() => {
                     handledisLikeChange();
                   }}
@@ -235,29 +235,25 @@ const VideoPlayer = ({}) => {
                     }`}
                     onClick={handleDislike}
                   />
-                  <span className="text-lg">{video.dislikes}</span>
+                  <span className="text-sm md:text-lg">{video.dislikes}</span>
                 </span>
               </div>
-              <div className="flex gap-4">
-                <span className="flex items-center bg-neutral-200 my-2 px-2 rounded-lg text-neutral-700">
-                  <Share></Share>
+              <div className="flex gap-2">
+                <span className="flex items-center bg-neutral-200 my-2 px-2 rounded-lg text-neutral-700 text-sm sm:text-normal  ">
+                  <Share className="w-4 sm:w-6"></Share>
                   Share
                 </span>
-                <span className="flex items-center bg-neutral-200 my-2 px-2 rounded-lg text-neutral-700">
-                  <Download></Download>
+                <span className="flex items-center bg-neutral-200 my-2 px-2 rounded-lg text-neutral-700 text-sm sm:text-normal ">
+                  <Download className="w-4 sm:w-6"></Download>
                   Download
                 </span>
-                <span>
-                  <Ellipsis className="flex items-center justify-center mt-2 bg-neutral-200 h-8 w-8 rounded-full text-neutral-700" />
-                </span>
+                {/* <span>
+                    <Ellipsis className="flex items-center justify-center mt-2 bg-neutral-200 h-8 w-8 rounded-full text-neutral-700" />
+                  </span> */}
               </div>
             </div>
           </div>
-          <div
-            className={`w-[54rem] ${
-              sidebarCollapsed ? "w-[65rem]" : "w-[55rem]"
-            }`}
-          >
+          <div className={` `}>
             <div className="bg-neutral-200 p-2 rounded-lg">
               <p className="flex gap-2 text-sm font-semibold">
                 <span>379,650 views</span>
@@ -285,18 +281,18 @@ const VideoPlayer = ({}) => {
                       <div>
                         <div className="flex gap-10 items-center">
                           <p>@{c.userId.username}</p>
-                          <small className="text-xs">
+                          <small className="text-xs hidden sm:block">
                             {new Date(c.timestamp).toLocaleString()}
                           </small>
                         </div>
 
                         {editingCommentId === c._id ? (
-                          <div className="flex gap-2 mt-2">
+                          <div className="flex flex-wrap gap-2 mt-2">
                             <input
                               type="text"
                               value={editedText}
                               onChange={(e) => setEditedText(e.target.value)}
-                              className="border p-1 rounded w-64"
+                              className="border p-1 rounded w-auto"
                             />
                             <button
                               onClick={() => handleSaveEdit(c._id)}
@@ -367,7 +363,7 @@ const VideoPlayer = ({}) => {
           </div>
         </div>
       </div>
-      <div className="w-[25em] mt-4 mx-2">
+      <div className=" mt-4 mx-auto">
         <DummySuggession></DummySuggession>
       </div>
     </div>

@@ -43,7 +43,7 @@ const Navbar = ({ onHamburgerClick }) => {
           <input
             id="search"
             type="text"
-            className=" w-[35rem] py-2 px-2 border-r-1 border-neutral-600 focus:outline-0"
+            className=" w-10/12 md:w-[35rem] py-2 px-2 border-r-1 border-neutral-600 focus:outline-0"
             placeholder="Search"
             value={search}
             onChange={(e) => setSearch(e.target.value)}

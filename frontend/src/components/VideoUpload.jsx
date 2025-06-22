@@ -1,7 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 
-const VideoUpload = ({ onUploadSuccess }) => {
+const VideoUpload = ({ onUploadSuccess, onClose }) => {
   const [formData, setFormData] = useState({
     title: "",
     category: "",
@@ -105,14 +105,14 @@ const VideoUpload = ({ onUploadSuccess }) => {
     <div className="p-4 rounded w-full max-w-xl mx-auto">
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         {/* <h2 className="text-xl font-bold">Upload New Video</h2> */}
-        <div className="flex gap-6">
+        <div className="flex gap-6 flex-wrap sm:flex-nowrap">
           <input
             type="text"
             name="title"
             placeholder="Title"
             value={formData.title}
             onChange={handleChange}
-            className="border p-2 rounded"
+            className="border p-2 rounded w-full"
             required
           />
 
@@ -122,7 +122,7 @@ const VideoUpload = ({ onUploadSuccess }) => {
             placeholder="Category (e.g., Travel, Coding)"
             value={formData.category}
             onChange={handleChange}
-            className="border p-2 rounded"
+            className="border p-2 rounded w-full"
             required
           />
         </div>
@@ -171,6 +171,13 @@ const VideoUpload = ({ onUploadSuccess }) => {
           className="bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition"
         >
           {loading ? "Uploading..." : "Upload Video"}
+        </button>
+
+        <button
+          onClick={onClose}
+          className="bg-neutral-400 text-black py-2 rounded hover:bg-blue-700 transition"
+        >
+          Cancel
         </button>
 
         {uploadMessage && (

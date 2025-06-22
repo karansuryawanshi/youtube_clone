@@ -4,6 +4,7 @@ import VideoCard from "../components/VideoCard";
 import { useNavigate } from "react-router-dom";
 import VideoUpload from "../components/VideoUpload";
 import { Pencil } from "lucide-react";
+import channelBanner from "../assets/channel_banner.jpg";
 
 const MyChannel = () => {
   const [videos, setVideos] = useState([]);
@@ -40,15 +41,24 @@ const MyChannel = () => {
 
   return (
     <div className="w-full">
+      <div className="flex items-center justify-center">
+        <img
+          className="w-11/12 sm:h-64 rounded-2xl"
+          src={channelBanner}
+          alt=""
+        />
+      </div>
       <div className="p-4 flex h-auto ">
         <img
-          className="w-40 h-40 rounded-full"
+          className="w-16 h-16 sm:w-40 sm:h-40 rounded-full mt-4"
           src={videos.channelBanner}
           alt=""
         />
         <div className="flex flex-col items-start ml-6 space-y-2 my-4">
           <div className="flex gap-6 justify-center items-center">
-            <h1 className="text-3xl font-bold">{videos.channelName}</h1>
+            <h1 className="text-normal sm:text-3xl font-bold">
+              {videos.channelName}
+            </h1>
             <Pencil
               className="cursor-pointer"
               onClick={() => {
@@ -61,24 +71,36 @@ const MyChannel = () => {
               }}
             />
           </div>
-          <p className="font-semibold">@{videos.channelName}</p>
-          <p>{videos.description}</p>
-          <button
-            onClick={() => {
-              setDialog(!dialog);
-            }}
-            className="bg-neutral-200 hover:bg-neutral-300 duration-300 py-1 px-4 rounded-lg"
-          >
-            Upload Video
-          </button>
+          <p className="font-semibold text-sm">@{videos.channelName}</p>
+          <p className="">{videos?.description?.slice(0, 18)}...</p>
+          <div className="flex gap-4 flex-wrap sm:flex-nowrap w-full">
+            <button className="bg-neutral-900 w-full hover:bg-neutral-700 text-white duration-300 py-1 px-4 rounded-lg">
+              Subscribe
+            </button>
+            <button
+              onClick={() => {
+                setDialog(!dialog);
+              }}
+              className="bg-neutral-200 w-full hover:bg-neutral-300 duration-300 py-1 px-4 rounded-lg"
+            >
+              Upload Video
+            </button>
+          </div>
           {dialog && (
-            <VideoUpload onUploadSuccess={fetchMyVideos}></VideoUpload>
+            <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center">
+              <div className="bg-white p-6 rounded shadow-lg w-full max-w-xl">
+                <VideoUpload
+                  onClose={() => setDialog(false)}
+                  dialog={dialog}
+                ></VideoUpload>
+              </div>
+            </div>
           )}
         </div>
       </div>
       <div className="border-b-1 mx-4 border-neutral-500"></div>
       {/* /////////////////////////////////////////////////////////// */}
-
+      {/* <div c  lassName="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center z-[1000]"> */}
       {showEditDialog && (
         <div className="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center z-50">
           <div className="bg-white p-6 rounded-lg shadow w-96">
@@ -188,7 +210,7 @@ const MyChannel = () => {
           </div>
         </div>
       )}
-
+      {/* </div> */}
       {/* ////////////////////////////////////////////////////////// */}
 
       <div className="p-4">

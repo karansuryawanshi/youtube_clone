@@ -82,7 +82,7 @@ const CreateChannel = () => {
             <img
               src={form.channelBanner}
               alt="Banner Preview"
-              className="w-20 h-20 mx-auto rounded-full object-cover rounded"
+              className="w-20 h-20 mx-auto rounded-full object-cover"
             />
           ) : (
             <div className="w-20 h-20 bg-sky-200 flex items-center justify-center rounded-full mx-auto">
