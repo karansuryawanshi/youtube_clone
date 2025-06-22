@@ -20,7 +20,6 @@ const Navbar = ({ onHamburgerClick }) => {
   const [userLogo, setUserLogo] = useState("");
   const [showMenu, setShowMenu] = useState(false);
 
-  // setUserLogo(user.username);
   useEffect(() => {
     setUserLogo(user?.username[0]);
   });
@@ -39,17 +38,17 @@ const Navbar = ({ onHamburgerClick }) => {
             <img width={100} height={100} src={YoutubeLogo} alt="" />
           </span>
         </div>
-        <div className="my-4 flex border-2 rounded-full border-neutral-500 items-center px-2">
+        <div className="my-4 flex border-2 rounded-full border-neutral-500 items-center px-2 mr-2">
           <input
             id="search"
             type="text"
-            className=" w-10/12 md:w-[35rem] py-2 px-2 border-r-1 border-neutral-600 focus:outline-0"
+            className=" w-10/12 md:w-[35rem] py-1 sm:py-2 px-2 border-r-1 border-neutral-600 focus:outline-0"
             placeholder="Search"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
           <label htmlFor="search">
-            <Search className="text-neutral-600 mx-2"></Search>
+            <Search className="text-neutral-600 mx-0 sm:mx-2"></Search>
           </label>
         </div>
         <div className="my-auto flex gap-4">
@@ -101,7 +100,9 @@ const Navbar = ({ onHamburgerClick }) => {
               className="flex border-1 border-neutral-500 px-2 py-1 rounded-full"
             >
               <User className="cursor-pointer text-blue-500"></User>
-              <span className="text-blue-500 cursor-pointer">Sign up</span>
+              <span className="text-blue-500 cursor-pointer hidden lg:block">
+                Sign up
+              </span>
             </Link>
           )}
         </div>

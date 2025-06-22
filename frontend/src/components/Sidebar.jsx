@@ -10,6 +10,7 @@ import { ListVideo } from "lucide-react";
 import { SquarePlay } from "lucide-react";
 import { Clock } from "lucide-react";
 import { ThumbsUp } from "lucide-react";
+import { Link } from "react-router-dom";
 import {
   Flame,
   ShoppingBag,
@@ -42,6 +43,7 @@ const Sidebar = ({ collapsed }) => {
       name: "Home",
       Icons: Home,
       active: isHome(),
+      url: "/",
     },
     {
       name: "Shorts",
@@ -115,7 +117,7 @@ const Sidebar = ({ collapsed }) => {
   } else {
     return (
       <>
-        <div className="bg-white z-50 absolute md:relative left-0 t-0 h-screen overflow-y-auto scrollbar-thin scrollbar-thumb-gray-100 scrollbar-track-gray-100">
+        <div className="bg-white transition-all duration-300 z-50 absolute md:relative left-0 t-0 h-screen overflow-y-auto scrollbar-thin scrollbar-thumb-gray-100 scrollbar-track-gray-100">
           <div className="border-b-1 border-neutral-400 py-2">
             {sidebarLinks.map((item, index) => {
               return (
@@ -127,12 +129,30 @@ const Sidebar = ({ collapsed }) => {
                       : "flex mx-4 gap-4 px-2 py-2 bg-white rounded-lg hover:bg-neutral-500/10 duration-300 cursor-pointer"
                   }
                 >
-                  <span className="">
-                    <item.Icons
-                      className={item.active ? "text-black" : "font-semibold"}
-                    />
-                  </span>
-                  <span>{item.name}</span>
+                  {item.url ? (
+                    <Link to={item.url} className="flex gap-4">
+                      <span className="">
+                        <item.Icons
+                          className={
+                            item.active ? "text-black" : "font-semibold"
+                          }
+                        />
+                      </span>
+                      <span>{item.name}</span>
+                    </Link>
+                  ) : (
+                    <>
+                      <span className="">
+                        <item.Icons
+                          className={
+                            item.active ? "text-black" : "font-semibold"
+                          }
+                        />
+                      </span>
+                      {item.url}
+                      <span>{item.name}</span>
+                    </>
+                  )}
                 </div>
               );
             })}

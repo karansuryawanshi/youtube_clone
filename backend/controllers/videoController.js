@@ -69,15 +69,6 @@ export const createVideo = async (req, res) => {
   }
 };
 
-export const deleteVideo = async (req, res) => {
-  try {
-    // You can implement real delete logic later
-    res.json({ message: "Video deleted successfully (placeholder)" });
-  } catch (err) {
-    res.status(500).json({ message: "Failed to delete video" });
-  }
-};
-
 export const getVideos = async (req, res) => {
   const { search, category } = req.query;
 
@@ -135,9 +126,6 @@ export const dislikeVideo = async (req, res) => {
 // export const getVideoById = async (req, res) => {
 //   console.log("getVideoById");
 // };
-export const updateVideo = async (req, res) => {
-  console.log("updateVideo");
-};
 
 export const getUserVideos = async (req, res) => {
   try {
@@ -146,5 +134,55 @@ export const getUserVideos = async (req, res) => {
     res.status(200).json(videos);
   } catch (err) {
     res.status(500).json({ message: "Failed to fetch your videos" });
+  }
+};
+
+export const deleteVideo = async (req, res) => {
+  try {
+    const video = await Video.findById(req.params.id);
+    if (!video) return res.status(404).json({ message: "Video not found" });
+
+    const channel = await Channel.findById(video.channelId);
+    if (!channel || channel.owner.toString() !== req.user.id) {
+      return res.status(403).json({ message: "Unauthorized" });
+    }
+
+    await Video.findByIdAndDelete(req.params.id);
+    res.status(200).json({ message: "Video deleted successfully" });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+export const updateVideo = async (req, res) => {
+  const { id } = req.params;
+  const { title, thumbnailUrl, category, videoDescription } = req.body;
+
+  try {
+    const video = await Video.findById(id);
+    if (!video) return res.status(404).json({ message: "Video not found" });
+
+    // Check if the user is authorized to update the video
+    if (video.uploader.toString() !== req.user.id) {
+      return res.status(403).json({ message: "Unauthorized" });
+    }
+
+    // Update fields
+    if (title) video.title = title;
+    if (thumbnailUrl) video.thumbnailUrl = thumbnailUrl;
+    if (category) video.category = category;
+    if (videoDescription) video.videoDescription = videoDescription;
+
+    // Optional: Replace video file
+    if (req.file) {
+      video.videoUrl = `/uploads/videos/${req.file.filename}`;
+    }
+
+    const updatedVideo = await video.save();
+    res.status(200).json(updatedVideo);
+  } catch (err) {
+    res
+      .status(500)
+      .json({ message: "Error updating video", error: err.message });
   }
 };

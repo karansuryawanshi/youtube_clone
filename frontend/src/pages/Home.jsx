@@ -10,6 +10,7 @@ import { useUser } from "../context/UserContext";
 import { HomeIcon } from "lucide-react";
 // import { LogIn } from "lucide-react";
 import { LogIn } from "lucide-react"; // Optional icon
+import { toast } from "react-toastify";
 
 // import { UserProvider } from "./context/UserContext";
 
@@ -87,6 +88,7 @@ const Home = () => {
   {
     return (
       <div className="w-[-webkit-fill-available] h-screen overflow-y-scroll scroll-m-0 [scrollbar-width:none]">
+        {/* <button onClick={notify}>Show Toast</button> */}
         <div className="px-4">
           <ul className="flex gap-6 overflow-x-scroll scroll-m-0 [scrollbar-width:none]">
             {categories.map((category) => (

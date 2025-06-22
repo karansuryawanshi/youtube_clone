@@ -1,8 +1,9 @@
 import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import Navbar from "../components/navbar";
+import Navbar from "../components/Navbar";
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -50,8 +51,10 @@ const Register = () => {
 
       const { token } = res.data;
       localStorage.setItem("token", token);
+      toast.success("Registered Successfully");
       navigate("/");
     } catch (err) {
+      toast.error("Something went wrong");
       setError(err.response?.data?.message || "Something went wrong.");
     }
   };

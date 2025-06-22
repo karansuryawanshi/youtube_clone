@@ -2,6 +2,7 @@ import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { CircleUserRound } from "lucide-react";
+import { toast } from "react-toastify";
 
 const CreateChannel = () => {
   const [form, setForm] = useState({
@@ -40,9 +41,11 @@ const CreateChannel = () => {
       );
       const data = await res.json();
       setForm((prev) => ({ ...prev, channelBanner: data.secure_url }));
-      setMessage("✅ Banner uploaded");
+      // setMessage("✅ Banner uploaded");
+      toast.success("Banner uploaded");
     } catch (err) {
       console.error("Banner upload failed:", err);
+      toast.success("Failed to upload banner");
       setMessage("❌ Failed to upload banner");
     } finally {
       setLoading(false);
@@ -65,8 +68,10 @@ const CreateChannel = () => {
       });
 
       setMessage("🎉 Channel created!");
+      toast.success("Channel created!");
       navigate("/my-channel");
     } catch (err) {
+      toast.error("Failed to create channel");
       setMessage(err.response?.data?.message || "❌ Failed to create channel");
     }
   };
@@ -122,9 +127,9 @@ const CreateChannel = () => {
           {loading ? "uploading..." : "Create Channel"}
         </button>
 
-        {message && (
+        {/* {message && (
           <p className="text-sm text-center text-gray-700 mt-2">{message}</p>
-        )}
+        )} */}
       </form>
     </div>
   );

@@ -9,7 +9,9 @@ import { Share, Download } from "lucide-react";
 import { Pencil } from "lucide-react";
 import { Trash2 } from "lucide-react";
 import { Ellipsis } from "lucide-react";
+import { useUser } from "../context/UserContext";
 import DummySuggession from "../components/DummySuggession";
+import { toast } from "react-toastify";
 
 const VideoPlayer = ({}) => {
   const { id } = useParams();
@@ -32,6 +34,9 @@ const VideoPlayer = ({}) => {
 
   // console.log(sidebarCollapsed);
 
+  const { user } = useUser();
+
+  console.log("[User]", user);
   useEffect(() => {
     axios
       .get(`http://localhost:5000/api/videos/${id}`)
@@ -126,6 +131,7 @@ const VideoPlayer = ({}) => {
         headers: { Authorization: `Bearer ${token}` },
       });
       setComments((prev) => prev.filter((c) => c._id !== commentId));
+      toast.error("Comment Deleted");
     } catch (err) {
       alert("Delete failed");
       console.error(err);
@@ -162,6 +168,7 @@ const VideoPlayer = ({}) => {
       );
 
       setEditingCommentId(null);
+      toast.success("comment updated");
       setEditedText("");
     } catch (err) {
       console.error("Failed to update comment", err);
@@ -187,7 +194,7 @@ const VideoPlayer = ({}) => {
       <div className="flex w-100%">
         <div className="p-4">
           <video
-            className={`rounded-lg p-4 w-screen`}
+            className={`rounded-lg p-0 w-screen`}
             controls
             src={`http://localhost:5000${video.videoUrl}`}
           />
@@ -197,7 +204,7 @@ const VideoPlayer = ({}) => {
               <img
                 src={channelThumbnail}
                 alt="channel thumbnail"
-                className="w-auto h-8 sm:h-12 rounded-full"
+                className="w-8 h-8 sm:w-12 sm:h-12 rounded-full"
               />
               <div>
                 <p className=" font-semibold">{channelName}</p>
@@ -247,9 +254,6 @@ const VideoPlayer = ({}) => {
                   <Download className="w-4 sm:w-6"></Download>
                   Download
                 </span>
-                {/* <span>
-                    <Ellipsis className="flex items-center justify-center mt-2 bg-neutral-200 h-8 w-8 rounded-full text-neutral-700" />
-                  </span> */}
               </div>
             </div>
           </div>
@@ -271,7 +275,7 @@ const VideoPlayer = ({}) => {
 
             <div className="mt-4 space-y-4">
               {comments.map((c) => {
-                console.log("[c]", c.userId.username);
+                console.log("[c]", c.userId._id);
                 return (
                   <div
                     key={c._id}
@@ -311,24 +315,30 @@ const VideoPlayer = ({}) => {
                           <p>{c.text}</p>
                         )}
                       </div>
+                      {/* ========================================= */}
+                      {user._id == c.userId._id ? (
+                        <div>
+                          <button
+                            onClick={() => handleDeleteComment(c._id)}
+                            className="text-red-400 text-sm ml-2"
+                          >
+                            <Trash2 />
+                          </button>
+                          <button
+                            onClick={() => {
+                              setEditingCommentId(c._id);
+                              setEditedText(c.text);
+                            }}
+                            className="text-neutral-700 text-sm ml-2"
+                          >
+                            <Pencil />
+                          </button>
+                        </div>
+                      ) : (
+                        <></>
+                      )}
 
-                      <div>
-                        <button
-                          onClick={() => handleDeleteComment(c._id)}
-                          className="text-red-400 text-sm ml-2"
-                        >
-                          <Trash2 />
-                        </button>
-                        <button
-                          onClick={() => {
-                            setEditingCommentId(c._id);
-                            setEditedText(c.text);
-                          }}
-                          className="text-neutral-700 text-sm ml-2"
-                        >
-                          <Pencil />
-                        </button>
-                      </div>
+                      {/* ========================================= */}
                     </div>
 
                     <div className="flex gap-2">

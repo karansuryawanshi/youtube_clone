@@ -1,7 +1,8 @@
 import { useState } from "react";
 import axios from "axios";
+import { toast } from "react-toastify";
 
-const VideoUpload = ({ onUploadSuccess, onClose }) => {
+const VideoUpload = ({ onClose, fetchMyVideos }) => {
   const [formData, setFormData] = useState({
     title: "",
     category: "",
@@ -46,6 +47,7 @@ const VideoUpload = ({ onUploadSuccess, onClose }) => {
     } catch (err) {
       console.error("Thumbnail upload failed:", err);
       setUploadMessage("❌ Failed to upload image");
+      onClose();
     } finally {
       setLoading(false);
     }
@@ -89,12 +91,17 @@ const VideoUpload = ({ onUploadSuccess, onClose }) => {
         }
       );
 
-      setUploadMessage("✅ Video uploaded successfully!");
+      setUploadMessage("Video uploaded successfully!");
+      toast.success("Video uploaded successfully!");
       setFormData({ title: "", category: "", description: "", video: null });
       setImageUrl("");
-      onUploadSuccess(); // refresh parent video list
+      fetchMyVideos();
+      // onUploadSuccess(); // refresh parent video list
+      onClose();
     } catch (err) {
+      toast.error("Video upload failed");
       console.error("Video upload failed", err);
+      onClose();
       setUploadMessage(err.response?.data?.message || "❌ Upload failed.");
     } finally {
       setLoading(false);
@@ -180,9 +187,9 @@ const VideoUpload = ({ onUploadSuccess, onClose }) => {
           Cancel
         </button>
 
-        {uploadMessage && (
+        {/* {uploadMessage && (
           <p className="text-sm text-center text-gray-700">{uploadMessage}</p>
-        )}
+        )} */}
       </form>
     </div>
   );

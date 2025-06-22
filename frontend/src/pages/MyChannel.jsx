@@ -5,6 +5,8 @@ import { useNavigate } from "react-router-dom";
 import VideoUpload from "../components/VideoUpload";
 import { Pencil } from "lucide-react";
 import channelBanner from "../assets/channel_banner.jpg";
+import { toast } from "react-toastify";
+import { EllipsisVertical } from "lucide-react";
 
 const MyChannel = () => {
   const [videos, setVideos] = useState([]);
@@ -12,6 +14,10 @@ const MyChannel = () => {
   const [dialog, setDialog] = useState(false);
   const [showEditDialog, setShowEditDialog] = useState(false);
   const [channelName, setChannelName] = useState();
+  const [showMenu, setShowMenu] = useState(false);
+  const [editDialog, setEditDialog] = useState(false);
+  const [selectedVideo, setSelectedVideo] = useState(null);
+
   const [editForm, setEditForm] = useState({
     channelName: "",
     description: "",
@@ -19,6 +25,26 @@ const MyChannel = () => {
   });
 
   const navigate = useNavigate();
+  const token = localStorage.getItem("token");
+
+  const updateChannel = async () => {
+    const token = localStorage.getItem("token");
+    try {
+      await axios.put(
+        "http://localhost:5000/api/channels/my/channel",
+        editForm,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      await fetchMyVideos();
+      toast.success("Channel Updated Successfully");
+      setShowEditDialog(false);
+    } catch (err) {
+      toast.success("Something went wrong");
+      console.error("Update failed", err);
+    }
+  };
 
   const fetchMyVideos = async () => {
     const token = localStorage.getItem("token");
@@ -32,12 +58,34 @@ const MyChannel = () => {
     setVideos(res.data);
     setMyVideos(res.data.videos);
     setChannelName(res.data.channelName);
-    console.log(res.data.channelBanner);
+    // console.log(res.data.channelBanner);
   };
 
   useEffect(() => {
     fetchMyVideos();
   }, []);
+
+  const handleEdit = (video) => {
+    // Option 1: Navigate to a separate edit page
+    navigate(`/edit-video/${video._id}`);
+
+    // Option 2: Open dialog/modal with video data (if you're using a modal)
+  };
+
+  const handleDelete = async (videoId) => {
+    const token = localStorage.getItem("token");
+    try {
+      await axios.delete(`http://localhost:5000/api/videos/${videoId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      toast.error("Video Deleted!");
+      fetchMyVideos(); // or setVideos(videos.filter(...))
+    } catch (err) {
+      console.error("Failed to delete", err);
+    }
+  };
 
   return (
     <div className="w-full">
@@ -92,6 +140,7 @@ const MyChannel = () => {
                 <VideoUpload
                   onClose={() => setDialog(false)}
                   dialog={dialog}
+                  fetchMyVideos={fetchMyVideos}
                 ></VideoUpload>
               </div>
             </div>
@@ -187,21 +236,8 @@ const MyChannel = () => {
               </button>
               <button
                 className="bg-blue-600 text-white px-4 py-1 rounded"
-                onClick={async () => {
-                  const token = localStorage.getItem("token");
-                  try {
-                    await axios.put(
-                      "http://localhost:5000/api/channels/my/channel",
-                      editForm,
-                      {
-                        headers: { Authorization: `Bearer ${token}` },
-                      }
-                    );
-                    await fetchMyVideos();
-                    setShowEditDialog(false);
-                  } catch (err) {
-                    console.error("Update failed", err);
-                  }
+                onClick={() => {
+                  updateChannel();
                 }}
               >
                 Save
@@ -220,13 +256,42 @@ const MyChannel = () => {
             return (
               <>
                 <div
-                  className="bg-neutral-100 flex flex-col w-96 p-2 rounded-lg"
-                  onClick={() => {
-                    navigate(`/videos/${item._id}`);
-                  }}
+                  className="bg-neutral-100 flex flex-col w-96 p-2 rounded-lg relative"
+                  onClick={() => navigate(`/videos/${item._id}`)}
                 >
                   <img className="w-96 h-48" src={item.thumbnailUrl} alt="" />
-                  <p className="my-2">{item.title}</p>
+                  <div className="flex justify-between my-2">
+                    <p>{item.title}</p>
+                    <EllipsisVertical
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setShowMenu((prev) =>
+                          prev === item._id ? null : item._id
+                        );
+                      }}
+                      className="cursor-pointer"
+                    />
+                  </div>
+
+                  {showMenu === item._id && (
+                    <div
+                      className="absolute right-4 top-58 bg-white rounded shadow z-10 p-2 space-y-1"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <button
+                        className="block w-full text-left cursor-pointer px-2 py-1 rounded"
+                        onClick={() => handleEdit(item)}
+                      >
+                        Edit
+                      </button>
+                      <button
+                        className="block w-full text-left text-red-600 cursor-pointer px-2 py-1 rounded"
+                        onClick={() => handleDelete(item._id)}
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  )}
                 </div>
               </>
             );

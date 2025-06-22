@@ -12,6 +12,9 @@ import Login from "./pages/Login.jsx";
 import { UserProvider } from "./context/UserContext";
 import CreateChannel from "./pages/CreateChannel.jsx";
 import { SearchProvider } from "./context/SearchContext.jsx";
+import { ToastContainer, Zoom } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import EditVideo from "./pages/EditVideo.jsx";
 
 const appRouter = createBrowserRouter([
   {
@@ -21,6 +24,7 @@ const appRouter = createBrowserRouter([
       { path: "/", element: <Home /> },
       { path: "/videos/:id", element: <VideoPlayer /> },
       { path: "/my-channel", element: <MyChannel /> },
+      { path: "/edit-video/:id", element: <EditVideo /> },
       { path: "/create-channel", element: <CreateChannel /> },
     ],
   },
@@ -35,13 +39,28 @@ const appRouter = createBrowserRouter([
 ]);
 
 createRoot(document.getElementById("root")).render(
-  <StrictMode>
-    <SearchProvider>
-      <ChannelProvider>
-        <UserProvider>
-          <RouterProvider router={appRouter} />
-        </UserProvider>
-      </ChannelProvider>
-    </SearchProvider>
-  </StrictMode>
+  <>
+    <StrictMode>
+      <SearchProvider>
+        <ChannelProvider>
+          <UserProvider>
+            <RouterProvider router={appRouter} />
+          </UserProvider>
+        </ChannelProvider>
+      </SearchProvider>
+    </StrictMode>
+    <ToastContainer
+      position="top-center"
+      autoClose={5000}
+      hideProgressBar={false}
+      newestOnTop={false}
+      closeOnClick={false}
+      rtl={false}
+      pauseOnFocusLoss
+      draggable
+      pauseOnHover
+      theme="colored"
+      transition={Zoom}
+    />
+  </>
 );

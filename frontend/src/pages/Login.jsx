@@ -1,8 +1,9 @@
 import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import Navbar from "../components/navbar";
+import Navbar from "../components/Navbar";
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const Login = () => {
   const [formData, setFormData] = useState({ email: "", password: "" });
@@ -27,12 +28,13 @@ const Login = () => {
       );
       const { token } = res.data;
 
-      // ✅ Store token
       localStorage.setItem("token", token);
 
-      // ✅ Redirect to home or dashboard
+      toast.success("Login Successfully");
+
       navigate("/");
     } catch (err) {
+      toast.error("Login failed");
       setError(err.response?.data?.message || "Login failed");
     }
   };
