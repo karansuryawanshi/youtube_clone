@@ -1,12 +1,10 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import VideoCard from "../components/VideoCard";
 import { useNavigate } from "react-router-dom";
 import VideoUpload from "../components/VideoUpload";
-import { Pencil } from "lucide-react";
+import { Pencil, EllipsisVertical } from "lucide-react";
 import channelBanner from "../assets/channel_banner.jpg";
 import { toast } from "react-toastify";
-import { EllipsisVertical } from "lucide-react";
 
 const MyChannel = () => {
   const [videos, setVideos] = useState([]);
@@ -15,8 +13,6 @@ const MyChannel = () => {
   const [showEditDialog, setShowEditDialog] = useState(false);
   const [channelName, setChannelName] = useState();
   const [showMenu, setShowMenu] = useState(false);
-  const [editDialog, setEditDialog] = useState(false);
-  const [selectedVideo, setSelectedVideo] = useState(null);
 
   const [editForm, setEditForm] = useState({
     channelName: "",
@@ -58,7 +54,6 @@ const MyChannel = () => {
     setVideos(res.data);
     setMyVideos(res.data.videos);
     setChannelName(res.data.channelName);
-    // console.log(res.data.channelBanner);
   };
 
   useEffect(() => {
@@ -66,10 +61,7 @@ const MyChannel = () => {
   }, []);
 
   const handleEdit = (video) => {
-    // Option 1: Navigate to a separate edit page
     navigate(`/edit-video/${video._id}`);
-
-    // Option 2: Open dialog/modal with video data (if you're using a modal)
   };
 
   const handleDelete = async (videoId) => {
@@ -81,9 +73,35 @@ const MyChannel = () => {
         },
       });
       toast.error("Video Deleted!");
-      fetchMyVideos(); // or setVideos(videos.filter(...))
+      fetchMyVideos();
     } catch (err) {
       console.error("Failed to delete", err);
+    }
+  };
+
+  const handleBannerUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("upload_preset", "oxqufdxz"); // your unsigned preset
+
+    try {
+      const res = await fetch(
+        "https://api.cloudinary.com/v1_1/dwr7lrgso/image/upload",
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+      const data = await res.json();
+      setEditForm((prev) => ({
+        ...prev,
+        channelBanner: data.secure_url,
+      }));
+    } catch (err) {
+      console.error("Banner upload failed", err);
     }
   };
 
@@ -91,12 +109,12 @@ const MyChannel = () => {
     <div className="w-full">
       <div className="flex items-center justify-center">
         <img
-          className="w-11/12 sm:h-64 rounded-2xl"
+          className="w-11/12 h-28 sm:h-64 rounded-2xl"
           src={channelBanner}
           alt=""
         />
       </div>
-      <div className="p-4 flex h-auto ">
+      <div className="p-4 flex h-auto w-full">
         <img
           className="w-16 h-16 sm:w-40 sm:h-40 rounded-full mt-4"
           src={videos.channelBanner}
@@ -148,13 +166,10 @@ const MyChannel = () => {
         </div>
       </div>
       <div className="border-b-1 mx-4 border-neutral-500"></div>
-      {/* /////////////////////////////////////////////////////////// */}
-      {/* <div c  lassName="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center z-[1000]"> */}
       {showEditDialog && (
         <div className="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center z-50">
           <div className="bg-white p-6 rounded-lg shadow w-96">
             <h2 className="text-xl font-bold mb-4">Edit Channel</h2>
-
             <input
               type="text"
               name="channelName"
@@ -183,7 +198,6 @@ const MyChannel = () => {
               }
             />
 
-            {/* 👇 Cloudinary Upload for Banner */}
             <div className="mb-4">
               <label className="text-sm block mb-1 font-medium">
                 Upload New Banner Image
@@ -191,33 +205,10 @@ const MyChannel = () => {
               <input
                 type="file"
                 accept="image/*"
-                onChange={async (e) => {
-                  const file = e.target.files[0];
-                  const formData = new FormData();
-                  formData.append("file", file);
-                  formData.append("upload_preset", "oxqufdxz"); // your unsigned preset
-
-                  try {
-                    const res = await fetch(
-                      "https://api.cloudinary.com/v1_1/dwr7lrgso/image/upload",
-                      {
-                        method: "POST",
-                        body: formData,
-                      }
-                    );
-                    const data = await res.json();
-                    setEditForm((prev) => ({
-                      ...prev,
-                      channelBanner: data.secure_url,
-                    }));
-                  } catch (err) {
-                    console.error("Banner upload failed", err);
-                  }
-                }}
+                onChange={handleBannerUpload}
                 className="border p-2 rounded w-full"
               />
 
-              {/* ✅ Show banner preview */}
               {editForm.channelBanner && (
                 <img
                   src={editForm.channelBanner}
@@ -246,54 +237,51 @@ const MyChannel = () => {
           </div>
         </div>
       )}
-      {/* </div> */}
-      {/* ////////////////////////////////////////////////////////// */}
 
       <div className="p-4">
         <p className="text-lg border-b w-22">My Videos</p>
         <div className="flex flex-wrap gap-6 my-4">
-          {myVideos.map((item) => {
+          {myVideos.map((item, index) => {
             return (
-              <>
-                <div
-                  className="bg-neutral-100 flex flex-col w-96 p-2 rounded-lg relative"
-                  onClick={() => navigate(`/videos/${item._id}`)}
-                >
-                  <img className="w-96 h-48" src={item.thumbnailUrl} alt="" />
-                  <div className="flex justify-between my-2">
-                    <p>{item.title}</p>
-                    <EllipsisVertical
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setShowMenu((prev) =>
-                          prev === item._id ? null : item._id
-                        );
-                      }}
-                      className="cursor-pointer"
-                    />
-                  </div>
-
-                  {showMenu === item._id && (
-                    <div
-                      className="absolute right-4 top-58 bg-white rounded shadow z-10 p-2 space-y-1"
-                      onClick={(e) => e.stopPropagation()}
-                    >
-                      <button
-                        className="block w-full text-left cursor-pointer px-2 py-1 rounded"
-                        onClick={() => handleEdit(item)}
-                      >
-                        Edit
-                      </button>
-                      <button
-                        className="block w-full text-left text-red-600 cursor-pointer px-2 py-1 rounded"
-                        onClick={() => handleDelete(item._id)}
-                      >
-                        Delete
-                      </button>
-                    </div>
-                  )}
+              <div
+                className="bg-neutral-100 flex flex-col w-96 p-2 rounded-lg relative"
+                key={index}
+                onClick={() => navigate(`/videos/${item._id}`)}
+              >
+                <img className="w-96 h-48" src={item.thumbnailUrl} alt="" />
+                <div className="flex justify-between my-2">
+                  <p>{item.title}</p>
+                  <EllipsisVertical
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setShowMenu((prev) =>
+                        prev === item._id ? null : item._id
+                      );
+                    }}
+                    className="cursor-pointer"
+                  />
                 </div>
-              </>
+
+                {showMenu === item._id && (
+                  <div
+                    className="absolute right-4 top-58 bg-white rounded shadow z-10 p-2 space-y-1"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <button
+                      className="block w-full text-left cursor-pointer px-2 py-1 rounded"
+                      onClick={() => handleEdit(item)}
+                    >
+                      Edit
+                    </button>
+                    <button
+                      className="block w-full text-left text-red-600 cursor-pointer px-2 py-1 rounded"
+                      onClick={() => handleDelete(item._id)}
+                    >
+                      Delete
+                    </button>
+                  </div>
+                )}
+              </div>
             );
           })}
         </div>

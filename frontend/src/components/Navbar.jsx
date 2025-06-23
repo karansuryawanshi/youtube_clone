@@ -1,24 +1,19 @@
 import React, { useEffect, useState } from "react";
-import { Menu } from "lucide-react";
-// import { Youtube } from "lucide-react";
-import { User } from "lucide-react";
-import { Search } from "lucide-react";
-import { BadgePlus } from "lucide-react";
+import { User, Menu, Search, BadgePlus } from "lucide-react";
 import { useChannel } from "../context/ChannelContext";
 import { useUser } from "../context/UserContext";
 import { useSearch } from "../context/SearchContext";
-import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 import YoutubeLogo from "../assets/youtubeLogo.png";
 
 const Navbar = ({ onHamburgerClick }) => {
-  // const [channel, setChannel] = useState(null);
-  const { channel, loading } = useChannel();
-  const { user } = useUser();
-  const { search, setSearch } = useSearch();
   const [userLogo, setUserLogo] = useState("");
   const [showMenu, setShowMenu] = useState(false);
+
+  const { search, setSearch } = useSearch();
+  const { channel, loading } = useChannel();
+  const { user } = useUser();
 
   useEffect(() => {
     setUserLogo(user?.username[0]);
@@ -59,7 +54,6 @@ const Navbar = ({ onHamburgerClick }) => {
           )}
           {userLogo ? (
             <div className="relative">
-              {/* Avatar Button */}
               <button
                 className="bg-purple-800 text-amber-50 rounded-full w-8 h-8 text-2xl flex items-center justify-center"
                 onClick={() => setShowMenu((prev) => !prev)}
@@ -67,21 +61,31 @@ const Navbar = ({ onHamburgerClick }) => {
                 {userLogo?.toUpperCase()}
               </button>
 
-              {/* Dropdown Menu */}
               {showMenu && (
                 <div
                   className="absolute right-0 mt-2 bg-white shadow-md rounded w-36 z-50"
-                  onClick={(e) => e.stopPropagation()} // prevent menu from closing
+                  onClick={(e) => e.stopPropagation()}
                 >
-                  <button
-                    onClick={() => {
-                      navigate("/my-channel");
-                      setShowMenu(false);
-                    }}
-                    className="w-full text-left px-4 py-2 hover:bg-gray-100"
-                  >
-                    My Channel
-                  </button>
+                  {channel?.message == null ? (
+                    <button
+                      onClick={() => {
+                        navigate("/my-channel");
+                        setShowMenu(false);
+                      }}
+                      className="w-full text-left px-4 py-2 hover:bg-gray-100"
+                    >
+                      My Channel
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() => {
+                        navigate("/create-channel");
+                      }}
+                      className="w-full text-left px-4 py-2 hover:bg-gray-100"
+                    >
+                      Create Channel
+                    </button>
+                  )}
                   <button
                     onClick={() => {
                       logout();

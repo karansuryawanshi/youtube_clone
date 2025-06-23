@@ -6,7 +6,6 @@ import videoRoutes from "./routes/videoRoutes.js";
 import cors from "cors";
 import commentRoutes from "./routes/commentRoutes.js";
 import channelRoutes from "./routes/channelRoutes.js";
-// import channelRoutes from "./routes/channelRoutes.js";
 
 dotenv.config();
 const app = express();

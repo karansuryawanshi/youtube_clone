@@ -4,11 +4,14 @@ import { useParams } from "react-router-dom";
 import CommentBox from "../components/CommentBox";
 import { jwtDecode } from "jwt-decode";
 import { useOutletContext } from "react-router-dom";
-import { ThumbsUp, ThumbsDown } from "lucide-react";
-import { Share, Download } from "lucide-react";
-import { Pencil } from "lucide-react";
-import { Trash2 } from "lucide-react";
-import { Ellipsis } from "lucide-react";
+import {
+  Pencil,
+  Trash2,
+  Share,
+  Download,
+  ThumbsUp,
+  ThumbsDown,
+} from "lucide-react";
 import { useUser } from "../context/UserContext";
 import DummySuggession from "../components/DummySuggession";
 import { toast } from "react-toastify";
@@ -25,18 +28,14 @@ const VideoPlayer = ({}) => {
   const [commentDetails, setCommentDetails] = useState([]);
   const [likedComments, setLikedComments] = useState({});
   const [dislikedComments, setDislikedComments] = useState({});
-
   const [videoDescription, setVideoDescription] = useState(false);
   const [editingCommentId, setEditingCommentId] = useState(null);
   const [editedText, setEditedText] = useState("");
 
   const { sidebarCollapsed } = useOutletContext();
 
-  // console.log(sidebarCollapsed);
-
   const { user } = useUser();
 
-  console.log("[User]", user);
   useEffect(() => {
     axios
       .get(`http://localhost:5000/api/videos/${id}`)
@@ -45,7 +44,7 @@ const VideoPlayer = ({}) => {
   }, [id]);
 
   const handleLike = async () => {
-    if (liked) return; // prevent multiple likes
+    if (liked) return;
 
     const token = localStorage.getItem("token");
 
@@ -58,12 +57,17 @@ const VideoPlayer = ({}) => {
         }
       );
 
-      setVideo((prev) => ({ ...prev, likes: prev.likes + 1 }));
+      setVideo((prev) => ({
+        ...prev,
+        likes: prev.likes + 1,
+      }));
       setLiked(true);
 
       if (disLiked) {
-        // undo dislike
-        setVideo((prev) => ({ ...prev, dislikes: prev.dislikes - 1 }));
+        setVideo((prev) => ({
+          ...prev,
+          dislikes: prev.dislikes - 1,
+        }));
         setDisLiked(false);
       }
     } catch (err) {
@@ -72,7 +76,7 @@ const VideoPlayer = ({}) => {
   };
 
   const handleDislike = async () => {
-    if (disLiked) return; // prevent multiple dislikes
+    if (disLiked) return;
 
     const token = localStorage.getItem("token");
 
@@ -85,12 +89,17 @@ const VideoPlayer = ({}) => {
         }
       );
 
-      setVideo((prev) => ({ ...prev, dislikes: prev.dislikes + 1 }));
-      setDisLiked(true);
+      setVideo((prev) => ({
+        ...prev,
+        dislikes: prev.dislikes + 1,
+      }));
 
+      setDisLiked(true);
       if (liked) {
-        // undo like
-        setVideo((prev) => ({ ...prev, likes: prev.likes - 1 }));
+        setVideo((prev) => ({
+          ...prev,
+          likes: prev.likes - 1,
+        }));
         setLiked(false);
       }
     } catch (err) {
@@ -104,7 +113,7 @@ const VideoPlayer = ({}) => {
       setComments(res.data.comments);
       setChannelId(res.data.channelId);
       setVideoDescription(res.data.videoDescription);
-      console.log(res.data);
+      // console.log(res.data);
     });
   }, [id]);
 
@@ -159,8 +168,6 @@ const VideoPlayer = ({}) => {
           },
         }
       );
-
-      // Update the comment in UI
       setComments((prev) =>
         prev.map((c) =>
           c._id === commentId ? { ...c, text: res.data.comment.text } : c
@@ -187,7 +194,7 @@ const VideoPlayer = ({}) => {
 
   if (!video) return <p>Loading...</p>;
 
-  console.log(videoDescription);
+  // console.log(videoDescription);
 
   return (
     <div className="h-screen w-screen grid grid-cols-1 xl:grid-cols-[70%_30%] mx-2 overflow-x-hidden overflow-y-scroll scroll-m-0 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden my-4">
@@ -226,7 +233,10 @@ const VideoPlayer = ({}) => {
                     className={`w-5 cursor-pointer ${
                       liked ? "fill-neutral-700" : "fill-none"
                     }`}
-                    onClick={handleLike}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleLike();
+                    }}
                   />
                   <span className="text-sm md:text-lg">{video.likes}</span>
                 </span>
@@ -240,7 +250,10 @@ const VideoPlayer = ({}) => {
                     className={`w-5 cursor-pointer ${
                       disLiked ? "fill-neutral-700" : "fill-none"
                     }`}
-                    onClick={handleDislike}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleDislike();
+                    }}
                   />
                   <span className="text-sm md:text-lg">{video.dislikes}</span>
                 </span>
@@ -275,7 +288,7 @@ const VideoPlayer = ({}) => {
 
             <div className="mt-4 space-y-4">
               {comments.map((c) => {
-                console.log("[c]", c.userId._id);
+                // console.log("[c]", c.userId._id);
                 return (
                   <div
                     key={c._id}
@@ -315,7 +328,6 @@ const VideoPlayer = ({}) => {
                           <p>{c.text}</p>
                         )}
                       </div>
-                      {/* ========================================= */}
                       {user._id == c.userId._id ? (
                         <div>
                           <button
@@ -337,8 +349,6 @@ const VideoPlayer = ({}) => {
                       ) : (
                         <></>
                       )}
-
-                      {/* ========================================= */}
                     </div>
 
                     <div className="flex gap-2">

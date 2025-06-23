@@ -5,14 +5,9 @@ import { Link } from "react-router-dom";
 import { Dot } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useSearch } from "../context/SearchContext";
-// import { useUser } from "../context/UserContext";
 import { useUser } from "../context/UserContext";
 import { HomeIcon } from "lucide-react";
-// import { LogIn } from "lucide-react";
-import { LogIn } from "lucide-react"; // Optional icon
-import { toast } from "react-toastify";
-
-// import { UserProvider } from "./context/UserContext";
+import { LogIn } from "lucide-react";
 
 const categories = [
   "All",
@@ -26,13 +21,9 @@ const categories = [
 
 const Home = () => {
   const [videos, setVideos] = useState([]);
-  // const [search, setSearch] = useState("");
-  const [category, setCategory] = useState("");
-  const { search } = useSearch();
-
-  // const [videoId, setVideoId] = useState();
-
   const [selected, setSelected] = useState("All");
+
+  const { search } = useSearch();
   const { user } = useUser();
 
   const navigate = useNavigate();
@@ -56,7 +47,6 @@ const Home = () => {
         console.error("Error fetching videos", err);
       }
     };
-
     fetchVideos();
   }, [search, selected]);
 
@@ -87,8 +77,7 @@ const Home = () => {
   }
   {
     return (
-      <div className="w-[-webkit-fill-available] h-screen overflow-y-scroll scroll-m-0 [scrollbar-width:none]">
-        {/* <button onClick={notify}>Show Toast</button> */}
+      <div className="w-[-webkit-fill-available] h-screen mx-0 sm:mx-4 overflow-y-scroll scroll-m-0 [scrollbar-width:none]">
         <div className="px-4">
           <ul className="flex gap-6 overflow-x-scroll scroll-m-0 [scrollbar-width:none]">
             {categories.map((category) => (
@@ -109,9 +98,10 @@ const Home = () => {
 
         <div className="my-6 flex items-center">
           <section className="flex flex-wrap gap-8 mx-auto w-screen items-center justify-center lg:justify-start">
-            {videos.map((item) => {
+            {videos.map((item, index) => {
               return (
                 <article
+                  key={index}
                   onClick={() => {
                     navigate(`/videos/${item._id}`);
                   }}

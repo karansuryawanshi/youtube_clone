@@ -53,6 +53,7 @@ const Register = () => {
       localStorage.setItem("token", token);
       toast.success("Registered Successfully");
       navigate("/");
+      window.location.reload();
     } catch (err) {
       toast.error("Something went wrong");
       setError(err.response?.data?.message || "Something went wrong.");

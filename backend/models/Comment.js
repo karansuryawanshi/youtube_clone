@@ -3,7 +3,10 @@ import mongoose from "mongoose";
 const commentSchema = new mongoose.Schema({
   userId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
   videoId: { type: mongoose.Schema.Types.ObjectId, ref: "Video" },
-  text: String,
+  text: {
+    type: String,
+    require: true,
+  },
   timestamp: { type: Date, default: Date.now },
 });
 

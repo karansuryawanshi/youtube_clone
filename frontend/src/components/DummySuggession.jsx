@@ -59,9 +59,9 @@ const DummySuggession = () => {
   return (
     <>
       <section className="grid grid-cols-1 gap-4 lg:grid-cols-2 xl:grid-cols-1">
-        {dummyData.map((item) => {
+        {dummyData.map((item, index) => {
           return (
-            <article className="flex flex-col sm:flex-row">
+            <article className="flex flex-col sm:flex-row" key={index}>
               <img
                 className="w-[17rem] h-[6rem] mr-2 rounded-lg"
                 src={item.thumbnail}

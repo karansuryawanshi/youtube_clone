@@ -1,4 +1,4 @@
-import { StrictMode } from "react";
+// import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
 import App from "./App.jsx";
@@ -40,15 +40,15 @@ const appRouter = createBrowserRouter([
 
 createRoot(document.getElementById("root")).render(
   <>
-    <StrictMode>
-      <SearchProvider>
-        <ChannelProvider>
-          <UserProvider>
-            <RouterProvider router={appRouter} />
-          </UserProvider>
-        </ChannelProvider>
-      </SearchProvider>
-    </StrictMode>
+    {/* <StrictMode> */}
+    <SearchProvider>
+      <ChannelProvider>
+        <UserProvider>
+          <RouterProvider router={appRouter} />
+        </UserProvider>
+      </ChannelProvider>
+    </SearchProvider>
+    {/* </StrictMode> */}
     <ToastContainer
       position="top-center"
       autoClose={5000}

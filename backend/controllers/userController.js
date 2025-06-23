@@ -2,8 +2,7 @@ import cloudinary from "../utils/cloudinary.js";
 
 export const uploadProfileImage = async (req, res) => {
   try {
-    const fileStr = req.body.image; // base64 or file url
-
+    const fileStr = req.body.image;
     const uploaded = await cloudinary.uploader.upload(fileStr, {
       folder: "channel_profiles",
     });

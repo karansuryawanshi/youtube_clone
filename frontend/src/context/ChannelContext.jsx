@@ -17,10 +17,10 @@ const ChannelProvider = ({ children }) => {
           Authorization: `Bearer ${token}`,
         },
       });
-
       const data = await res.json();
       setChannel(data);
-      console.log(data);
+    } catch (err) {
+      console.error("Error fetching channel:", err.message);
     } finally {
       setLoading(false);
     }
@@ -41,5 +41,4 @@ const ChannelProvider = ({ children }) => {
 
 const useChannel = () => useContext(ChannelContext);
 
-// ✅ Consistent named exports
 export { ChannelProvider, useChannel };

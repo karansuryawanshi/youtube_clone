@@ -1,15 +1,12 @@
 import { useState } from "react";
-import { useChannel } from "../context/ChannelContext";
 import axios from "axios";
 
 const CommentBox = ({ videoId, onCommentAdded, commentDetails }) => {
   const [text, setText] = useState("");
-  const { channel, loading } = useChannel();
 
   const handlePost = async () => {
     const token = localStorage.getItem("token");
-    console.log(channel);
-    console.log("[Token]", token);
+    // console.log("[Token]", token);
 
     const res = await axios.post(
       `http://localhost:5000/api/comments/${videoId}`,
@@ -19,7 +16,7 @@ const CommentBox = ({ videoId, onCommentAdded, commentDetails }) => {
       }
     );
 
-    console.log("[res.data in commentBox]", res.data);
+    // console.log("[res.data in commentBox]", res.data);
 
     setText("");
     onCommentAdded(res.data);

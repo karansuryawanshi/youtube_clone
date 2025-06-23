@@ -1,35 +1,6 @@
 import Video from "../models/Video.js";
 import Channel from "../models/Channel.js";
 
-// export const createVideo = async (req, res) => {
-//   const { title, thumbnailUrl } = req.body;
-//   console.log("[title]", title);
-//   console.log("[thumbnailUrl]", thumbnailUrl);
-
-//   if (!req.file) {
-//     return res.status(400).json({ message: "Video file is required" });
-//   }
-
-//   const newVideo = new Video({
-//     title,
-//     thumbnailUrl,
-//     videoUrl: `/uploads/videos/${req.file.filename}`,
-//     // videoUrl: video,
-//     uploader: req.user.id,
-//     views: 0,
-//     likes: 0,
-//     dislikes: 0,
-//     uploadDate: new Date(),
-//   });
-
-//   try {
-//     const saved = await newVideo.save();
-//     res.status(201).json(saved);
-//   } catch (err) {
-//     res.status(500).json({ message: "Error saving video", err });
-//   }
-// };
-
 export const createVideo = async (req, res) => {
   const { title, thumbnailUrl, category, videoDescription } = req.body;
 
@@ -38,11 +9,9 @@ export const createVideo = async (req, res) => {
   }
 
   try {
-    // ✅ First, find the user's channel
     const channel = await Channel.findOne({ owner: req.user.id });
     if (!channel) return res.status(404).json({ message: "Channel not found" });
 
-    // ✅ Now it's safe to use channel._id
     const newVideo = new Video({
       title,
       thumbnailUrl,
@@ -58,8 +27,6 @@ export const createVideo = async (req, res) => {
     });
 
     const saved = await newVideo.save();
-
-    // ✅ Push video into channel
     channel.videos.push(saved._id);
     await channel.save();
 
@@ -77,8 +44,6 @@ export const getVideos = async (req, res) => {
   if (category) query.category = category;
 
   try {
-    // const videos = await Video.find(query).populate("uploader", "username");
-
     const videos = await Video.find(query)
       .populate("uploader", "username email avatar")
       .populate("channelId", "channelName channelBanner");
@@ -90,7 +55,6 @@ export const getVideos = async (req, res) => {
 };
 
 export const getVideoById = async (req, res) => {
-  // console.log("videosdddddd");
   try {
     const video = await Video.findById(req.params.id)
       .populate("uploader", "username")
@@ -123,14 +87,10 @@ export const dislikeVideo = async (req, res) => {
   res.json({ dislikes: video.dislikes });
 };
 
-// export const getVideoById = async (req, res) => {
-//   console.log("getVideoById");
-// };
-
 export const getUserVideos = async (req, res) => {
   try {
     const videos = await Video.find({ uploader: req.user.id });
-    // console.log("[videos]", videos);
+
     res.status(200).json(videos);
   } catch (err) {
     res.status(500).json({ message: "Failed to fetch your videos" });
@@ -162,18 +122,15 @@ export const updateVideo = async (req, res) => {
     const video = await Video.findById(id);
     if (!video) return res.status(404).json({ message: "Video not found" });
 
-    // Check if the user is authorized to update the video
     if (video.uploader.toString() !== req.user.id) {
       return res.status(403).json({ message: "Unauthorized" });
     }
 
-    // Update fields
     if (title) video.title = title;
     if (thumbnailUrl) video.thumbnailUrl = thumbnailUrl;
     if (category) video.category = category;
     if (videoDescription) video.videoDescription = videoDescription;
 
-    // Optional: Replace video file
     if (req.file) {
       video.videoUrl = `/uploads/videos/${req.file.filename}`;
     }

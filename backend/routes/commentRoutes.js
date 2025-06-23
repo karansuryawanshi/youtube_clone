@@ -5,9 +5,8 @@ import { editComment } from "../controllers/commentController.js";
 
 const router = express.Router();
 
-router.post("/:id", verifyToken, addComment); // POST /api/comments/:id
-router.delete("/:commentId", verifyToken, deleteComment); // DELETE /api/comments/:commentId
+router.post("/:id", verifyToken, addComment);
+router.delete("/:commentId", verifyToken, deleteComment);
 router.put("/:id", verifyToken, editComment);
-// router.delete("/:commentId", verifyToken, deleteComment);
 
 export default router;

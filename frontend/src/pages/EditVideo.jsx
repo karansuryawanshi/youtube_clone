@@ -17,6 +17,7 @@ const EditVideo = () => {
 
   const [newVideoFile, setNewVideoFile] = useState(null);
   const [loading, setLoading] = useState(true);
+
   const token = localStorage.getItem("token");
 
   useEffect(() => {
@@ -24,7 +25,7 @@ const EditVideo = () => {
       try {
         const res = await axios.get(`http://localhost:5000/api/videos/${id}`);
         setVideo(res.data);
-        console.log("[Res.data]", res.data);
+        // console.log("[Res.data]", res.data);
         setLoading(false);
       } catch (err) {
         console.error("Failed to fetch video", err);
@@ -55,12 +56,18 @@ const EditVideo = () => {
         }
       );
       const data = await res.json();
-      setVideo((prev) => ({
-        ...prev,
-        thumbnailUrl: data.secure_url,
-      }));
+
+      if (data.secure_url) {
+        setVideo((prev) => ({
+          ...prev,
+          thumbnailUrl: data.secure_url,
+        }));
+      } else {
+        toast.error("Failed to get image URL from Cloudinary");
+      }
     } catch (err) {
       console.error("Thumbnail upload failed", err);
+      toast.error("Thumbnail upload failed");
     }
   };
 
@@ -69,11 +76,11 @@ const EditVideo = () => {
 
     const formData = new FormData();
     formData.append("title", video.title);
-    formData.append("description", video.description);
+    formData.append("description", video.videoDescription);
     formData.append("category", video.category);
     formData.append("thumbnailUrl", video.thumbnailUrl);
     if (newVideoFile) {
-      formData.append("video", newVideoFile); // handled by multer backend
+      formData.append("video", newVideoFile);
     }
 
     try {
@@ -85,7 +92,7 @@ const EditVideo = () => {
       });
       toast.success("Video Updated Successfully");
 
-      navigate("/my-channel"); // redirect to homepage after update
+      navigate("/my-channel");
     } catch (err) {
       console.error("Update failed", err);
     }
@@ -110,32 +117,35 @@ const EditVideo = () => {
           className="w-full border px-4 py-2 rounded"
           required
         />
-        {/* {video.title} */}
+
         <textarea
-          name="description"
+          name="videoDescription"
           value={video.videoDescription || ""}
           onChange={handleChange}
           placeholder="Video Description"
           className="w-full border px-4 py-2 rounded"
           rows="4"
         />
+
         <input
           type="text"
           name="category"
+          id="category"
           value={video.category || ""}
           onChange={handleChange}
           placeholder="Category"
           className="w-full border px-4 py-2 rounded"
         />
-        {/* Thumbnail Upload & Preview */}
+
         <div className="space-y-2">
           <label className="block font-medium">Upload New Thumbnail</label>
           <input
             type="file"
+            className="border w-full px-2 py-2 bg-blue-500 text-white rounded-lg"
             accept="image/*"
             onChange={handleThumbnailUpload}
-            className="border p-2 rounded w-full"
           />
+
           {video.thumbnailUrl && (
             <img
               src={video.thumbnailUrl}
@@ -144,28 +154,28 @@ const EditVideo = () => {
             />
           )}
         </div>
-        {/* Video Upload & Preview */}
+
         <div className="space-y-2">
-          <label className="block font-medium">Replace Video (Optional)</label>
+          <label className="block font-medium">Replace Video</label>
           <input
             type="file"
             accept="video/*"
-            onChange={(e) => setNewVideoFile(e.target.files[0])}
-            className="border p-2 rounded w-full"
+            className="border w-full px-2 py-2 bg-blue-500 text-white rounded-lg"
+            onChange={(e) => {
+              const file = e.target.files[0];
+              if (file) {
+                const tempUrl = URL.createObjectURL(file);
+                setVideo((prev) => ({ ...prev, videoUrl: tempUrl }));
+                setNewVideoFile(file);
+              }
+            }}
           />
-          {video.videoUrl && (
-            <video
-              controls
-              src={`http://localhost:5000${video.videoUrl}`}
-              className="mt-2 w-full rounded"
-            />
-          )}
         </div>
         <button
           type="submit"
           className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
         >
-          Update Video
+          Save
         </button>
       </form>
     </div>

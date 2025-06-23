@@ -8,27 +8,25 @@ const CreateChannel = () => {
   const [form, setForm] = useState({
     channelName: "",
     description: "",
-    channelBanner: "", // holds the Cloudinary URL
+    channelBanner: "",
   });
 
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  // Handle input change
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
   };
 
-  // Handle banner image upload to Cloudinary
   const handleBannerUpload = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
 
     const cloudForm = new FormData();
     cloudForm.append("file", file);
-    cloudForm.append("upload_preset", "oxqufdxz"); // your unsigned preset
+    cloudForm.append("upload_preset", "oxqufdxz");
 
     try {
       setLoading(true);
@@ -41,21 +39,17 @@ const CreateChannel = () => {
       );
       const data = await res.json();
       setForm((prev) => ({ ...prev, channelBanner: data.secure_url }));
-      // setMessage("✅ Banner uploaded");
       toast.success("Banner uploaded");
     } catch (err) {
       console.error("Banner upload failed:", err);
       toast.success("Failed to upload banner");
-      setMessage("❌ Failed to upload banner");
     } finally {
       setLoading(false);
     }
   };
 
-  // Submit form
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setMessage("");
 
     const token = localStorage.getItem("token");
     if (!token) return setMessage("⚠️ You must be logged in.");
@@ -66,13 +60,12 @@ const CreateChannel = () => {
           Authorization: `Bearer ${token}`,
         },
       });
-
-      setMessage("🎉 Channel created!");
       toast.success("Channel created!");
       navigate("/my-channel");
+      window.location.reload();
     } catch (err) {
       toast.error("Failed to create channel");
-      setMessage(err.response?.data?.message || "❌ Failed to create channel");
+      setMessage(err.response?.data?.message || "Failed to create channel");
     }
   };
 
@@ -82,7 +75,6 @@ const CreateChannel = () => {
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <div className="flex flex-col gap-2">
-          {/* <label className="text-sm font-medium">Upload Channel Banner</label> */}
           {form.channelBanner ? (
             <img
               src={form.channelBanner}
@@ -126,10 +118,6 @@ const CreateChannel = () => {
         >
           {loading ? "uploading..." : "Create Channel"}
         </button>
-
-        {/* {message && (
-          <p className="text-sm text-center text-gray-700 mt-2">{message}</p>
-        )} */}
       </form>
     </div>
   );

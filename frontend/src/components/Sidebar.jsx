@@ -1,17 +1,16 @@
-// import { icons } from "lucide-react";
 import React from "react";
-import { Home } from "lucide-react";
-import { Zap } from "lucide-react";
 import { useLocation } from "react-router-dom";
-import { MonitorPlay } from "lucide-react";
-import { ChevronRight } from "lucide-react";
-import { History } from "lucide-react";
-import { ListVideo } from "lucide-react";
-import { SquarePlay } from "lucide-react";
-import { Clock } from "lucide-react";
-import { ThumbsUp } from "lucide-react";
 import { Link } from "react-router-dom";
 import {
+  ThumbsUp,
+  ChevronRight,
+  Zap,
+  Home,
+  MonitorPlay,
+  ListVideo,
+  History,
+  SquarePlay,
+  Clock,
   Flame,
   ShoppingBag,
   Music,
@@ -23,13 +22,13 @@ import {
   GraduationCap,
   Shirt,
   Podcast,
+  CircleUserRound,
 } from "lucide-react";
 
 import { Settings, Flag, HelpCircle, MessageSquareWarning } from "lucide-react";
 
 const Sidebar = ({ collapsed }) => {
   const location = useLocation();
-  // console.log("[sidebar]", collapsed);
   function isHome() {
     if (location.pathname === "/") {
       return true;
@@ -109,15 +108,30 @@ const Sidebar = ({ collapsed }) => {
   if (collapsed) {
     return (
       <div
-        className={`transition-all duration-300 bg-gray-200 ${
-          collapsed ? "w-0" : ""
+        className={`transition-all duration-300 ${
+          collapsed ? "w-0 sm:w-14" : ""
         }`}
-      ></div>
+      >
+        <ul className="hidden sm:flex items-center justify-center flex-col gap-8 mt-6">
+          <li>
+            <Home size={28} />
+          </li>
+          <li>
+            <Zap size={28} />
+          </li>
+          <li>
+            <MonitorPlay size={28} />
+          </li>
+          <li>
+            <CircleUserRound size={28} />
+          </li>
+        </ul>
+      </div>
     );
   } else {
     return (
       <>
-        <div className="bg-white transition-all duration-300 z-50 absolute md:relative left-0 t-0 h-screen overflow-y-auto scrollbar-thin scrollbar-thumb-gray-100 scrollbar-track-gray-100">
+        <div className="bg-white w-62 transition-all duration-300 z-50 absolute md:relative left-0 t-0 h-screen overflow-y-auto scrollbar-thin scrollbar-thumb-gray-100 scrollbar-track-gray-100">
           <div className="border-b-1 border-neutral-400 py-2">
             {sidebarLinks.map((item, index) => {
               return (
@@ -219,17 +233,17 @@ const Sidebar = ({ collapsed }) => {
                 <div
                   key={index}
                   className={
-                    item.active
+                    item?.active
                       ? "flex mx-4 gap-4 px-2 py-2 bg-neutral-500/10 rounded-lg cursor-pointer"
                       : "flex mx-4 gap-4 px-2 py-2 bg-white rounded-lg hover:bg-neutral-500/10 duration-300 cursor-pointer"
                   }
                 >
                   <span className="">
                     <item.Icons
-                      className={item.active ? "text-black" : "font-semibold"}
+                      className={item?.active ? "text-black" : "font-semibold"}
                     />
                   </span>
-                  <span>{item.name}</span>
+                  <span>{item?.name}</span>
                 </div>
               );
             })}

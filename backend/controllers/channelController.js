@@ -20,6 +20,10 @@ export const createChannel = async (req, res) => {
   try {
     const { channelName, description, channelBanner } = req.body;
 
+    if (!channelName || !description || !channelBanner) {
+      return res.status(400).json({ message: "All fields are required" });
+    }
+
     const existing = await Channel.findOne({ owner: req.user.id });
     if (existing)
       return res.status(400).json({ message: "Channel already exists" });
@@ -43,13 +47,16 @@ export const editMyChannel = async (req, res) => {
   try {
     const { channelName, description, channelBanner } = req.body;
 
+    if (!channelName || !description || !channelBanner) {
+      return res.status(400).json({ message: "All fields are required" });
+    }
+
     const channel = await Channel.findOne({ owner: req.user.id });
 
     if (!channel) {
       return res.status(404).json({ message: "Channel not found" });
     }
 
-    // Update fields if provided
     if (channelName) channel.channelName = channelName;
     if (description) channel.description = description;
     if (channelBanner) channel.channelBanner = channelBanner;
@@ -64,9 +71,7 @@ export const editMyChannel = async (req, res) => {
 };
 
 export const getMyChannel = async (req, res) => {
-  console.log("REQ.USER:");
   const userId = req.user.id;
-  console.log(userId);
   try {
     const channel = await Channel.findOne({ owner: req.user.id })
       .populate("videos")

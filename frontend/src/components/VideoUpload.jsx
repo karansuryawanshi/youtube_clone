@@ -10,11 +10,10 @@ const VideoUpload = ({ onClose, fetchMyVideos }) => {
     video: null,
   });
 
-  const [imageUrl, setImageUrl] = useState(""); // Cloudinary thumbnail URL
+  const [imageUrl, setImageUrl] = useState("");
   const [uploadMessage, setUploadMessage] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // Handle input change (text & video)
   const handleChange = (e) => {
     const { name, value, files } = e.target;
     setFormData((prev) => ({
@@ -23,14 +22,13 @@ const VideoUpload = ({ onClose, fetchMyVideos }) => {
     }));
   };
 
-  // Handle Cloudinary thumbnail upload
   const handleImageUpload = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
 
     const cloudForm = new FormData();
     cloudForm.append("file", file);
-    cloudForm.append("upload_preset", "oxqufdxz"); // your unsigned preset
+    cloudForm.append("upload_preset", "oxqufdxz");
 
     try {
       setLoading(true);
@@ -53,7 +51,6 @@ const VideoUpload = ({ onClose, fetchMyVideos }) => {
     }
   };
 
-  // Submit full video + metadata
   const handleSubmit = async (e) => {
     e.preventDefault();
     setUploadMessage("");
@@ -76,7 +73,7 @@ const VideoUpload = ({ onClose, fetchMyVideos }) => {
     data.append("category", formData.category.toLowerCase());
     data.append("videoDescription", formData.description);
     data.append("thumbnailUrl", imageUrl);
-    data.append("video", formData.video); // must match backend: upload.single("video")
+    data.append("video", formData.video);
 
     try {
       setLoading(true);
@@ -96,7 +93,6 @@ const VideoUpload = ({ onClose, fetchMyVideos }) => {
       setFormData({ title: "", category: "", description: "", video: null });
       setImageUrl("");
       fetchMyVideos();
-      // onUploadSuccess(); // refresh parent video list
       onClose();
     } catch (err) {
       toast.error("Video upload failed");
@@ -111,7 +107,6 @@ const VideoUpload = ({ onClose, fetchMyVideos }) => {
   return (
     <div className="p-4 rounded w-full max-w-xl mx-auto">
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-        {/* <h2 className="text-xl font-bold">Upload New Video</h2> */}
         <div className="flex gap-6 flex-wrap sm:flex-nowrap">
           <input
             type="text"
@@ -182,14 +177,10 @@ const VideoUpload = ({ onClose, fetchMyVideos }) => {
 
         <button
           onClick={onClose}
-          className="bg-neutral-400 text-black py-2 rounded hover:bg-blue-700 transition"
+          className="bg-neutral-400 text-black py-2 rounded hover:bg-neutral-500 transition"
         >
           Cancel
         </button>
-
-        {/* {uploadMessage && (
-          <p className="text-sm text-center text-gray-700">{uploadMessage}</p>
-        )} */}
       </form>
     </div>
   );

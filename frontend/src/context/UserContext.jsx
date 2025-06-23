@@ -1,5 +1,4 @@
 import { createContext, useContext, useEffect, useState } from "react";
-// import jwt_decode from "jwt-decode";
 import { jwtDecode } from "jwt-decode";
 
 import axios from "axios";
@@ -7,11 +6,11 @@ import axios from "axios";
 const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
-  const [user, setUser] = useState(null); // full user info
+  const [user, setUser] = useState(null);
 
   const loadUser = async () => {
     const token = localStorage.getItem("token");
-    console.log("Token:", localStorage.getItem("token"));
+    // console.log("Token:", localStorage.getItem("token"));
 
     if (!token) return setUser(null);
 
@@ -33,7 +32,6 @@ export const UserProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    console.log("Called loadUser");
     loadUser();
   }, []);
 
