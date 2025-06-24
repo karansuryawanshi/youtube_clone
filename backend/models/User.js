@@ -1,15 +1,24 @@
 import mongoose from "mongoose";
 
+// Schema for User model
 const userSchema = new mongoose.Schema({
   username: {
     type: String,
-    require: [true, "username is required"],
+    require: [true, "username is required"], // Username validation
     minlength: [5, "Username must be at least 5 characters long"],
+    match: [
+      /^[a-zA-Z0-9_]+$/, // Alphanumeric and underscores only
+      "Username can only contain letters, numbers, and underscores",
+    ],
+    unique: true,
   },
 
   email: {
     type: String,
     require: [true, "Email is required"],
+    match: [/\S+@\S+\.\S+/, "Invalid email address"], // Email format check
+    unique: true,
+    lowercase: true,
   },
 
   password: {
@@ -18,17 +27,17 @@ const userSchema = new mongoose.Schema({
     minlength: [5, "password must be at least 5 characters long"],
   },
 
-  avatar: String,
+  avatar: String, // Optional profile image
   channels: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Channel",
+      ref: "Channel", // User's channels
     },
   ],
 
   userId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
+    ref: "User", // Redundant field (can be removed if unused)
   },
 });
 

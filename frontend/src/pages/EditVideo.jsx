@@ -4,7 +4,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 
 const EditVideo = () => {
-  const { id } = useParams();
+  const { id } = useParams(); // Get video ID from URL
   const navigate = useNavigate();
 
   const [video, setVideo] = useState({
@@ -13,10 +13,10 @@ const EditVideo = () => {
     category: "",
     thumbnailUrl: "",
     videoUrl: "",
-  });
+  }); // Video form state
 
-  const [newVideoFile, setNewVideoFile] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [newVideoFile, setNewVideoFile] = useState(null); // For new video file
+  const [loading, setLoading] = useState(true); // Loading state
 
   const token = localStorage.getItem("token");
 
@@ -24,8 +24,7 @@ const EditVideo = () => {
     const fetchVideo = async () => {
       try {
         const res = await axios.get(`http://localhost:5000/api/videos/${id}`);
-        setVideo(res.data);
-        // console.log("[Res.data]", res.data);
+        setVideo(res.data); // Set video data
         setLoading(false);
       } catch (err) {
         console.error("Failed to fetch video", err);
@@ -36,7 +35,7 @@ const EditVideo = () => {
   }, [id]);
 
   const handleChange = (e) => {
-    setVideo({ ...video, [e.target.name]: e.target.value });
+    setVideo({ ...video, [e.target.name]: e.target.value }); // Handle input change
   };
 
   const handleThumbnailUpload = async (e) => {
@@ -45,7 +44,7 @@ const EditVideo = () => {
 
     const formData = new FormData();
     formData.append("file", file);
-    formData.append("upload_preset", "oxqufdxz");
+    formData.append("upload_preset", "oxqufdxz"); // Cloudinary preset
 
     try {
       const res = await fetch(
@@ -60,7 +59,7 @@ const EditVideo = () => {
       if (data.secure_url) {
         setVideo((prev) => ({
           ...prev,
-          thumbnailUrl: data.secure_url,
+          thumbnailUrl: data.secure_url, // Set thumbnail
         }));
       } else {
         toast.error("Failed to get image URL from Cloudinary");
@@ -80,7 +79,7 @@ const EditVideo = () => {
     formData.append("category", video.category);
     formData.append("thumbnailUrl", video.thumbnailUrl);
     if (newVideoFile) {
-      formData.append("video", newVideoFile);
+      formData.append("video", newVideoFile); // Append new video file if selected
     }
 
     try {
@@ -91,14 +90,13 @@ const EditVideo = () => {
         },
       });
       toast.success("Video Updated Successfully");
-
-      navigate("/my-channel");
+      navigate("/my-channel"); // Navigate after update
     } catch (err) {
       console.error("Update failed", err);
     }
   };
 
-  if (loading) return <p className="text-center mt-10">Loading...</p>;
+  if (loading) return <p className="text-center mt-10">Loading...</p>; // Show loading
 
   return (
     <div className="max-w-xl mx-auto p-4">
@@ -165,7 +163,7 @@ const EditVideo = () => {
               const file = e.target.files[0];
               if (file) {
                 const tempUrl = URL.createObjectURL(file);
-                setVideo((prev) => ({ ...prev, videoUrl: tempUrl }));
+                setVideo((prev) => ({ ...prev, videoUrl: tempUrl })); // Show temp video preview
                 setNewVideoFile(file);
               }
             }}

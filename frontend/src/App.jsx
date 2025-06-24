@@ -4,15 +4,17 @@ import Sidebar from "./components/Sidebar";
 import { useState } from "react";
 
 function App() {
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false); // Sidebar toggle state
 
   return (
     <>
       <div className="">
-        <Navbar onHamburgerClick={() => setSidebarCollapsed((prev) => !prev)} />
+        <Navbar onHamburgerClick={() => setSidebarCollapsed((prev) => !prev)} />{" "}
+        {/* Toggle sidebar */}
         <div className="flex">
-          <Sidebar collapsed={sidebarCollapsed} className="w-58" />
-          <Outlet context={{ sidebarCollapsed }} />
+          <Sidebar collapsed={sidebarCollapsed} className="w-58" />{" "}
+          {/* Conditional sidebar */}
+          <Outlet context={{ sidebarCollapsed }} /> {/* Render child routes */}
         </div>
       </div>
     </>

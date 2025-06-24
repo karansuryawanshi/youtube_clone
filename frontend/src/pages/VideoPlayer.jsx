@@ -1,3 +1,4 @@
+// Import necessary hooks, libraries, and components
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
@@ -32,17 +33,21 @@ const VideoPlayer = ({}) => {
   const [editingCommentId, setEditingCommentId] = useState(null);
   const [editedText, setEditedText] = useState("");
 
+  // Access sidebar state and user from context
   const { sidebarCollapsed } = useOutletContext();
 
   const { user } = useUser();
 
+  // Fetch video data by ID
+
   useEffect(() => {
     axios
       .get(`http://localhost:5000/api/videos/${id}`)
-      .then((res) => setVideo(res.data))
+      .then((res) => setVideo(res?.data))
       .catch((err) => console.log(err));
   }, [id]);
 
+  // Like video handler
   const handleLike = async () => {
     if (liked) return;
 
@@ -75,6 +80,7 @@ const VideoPlayer = ({}) => {
     }
   };
 
+  // Dislike video handler
   const handleDislike = async () => {
     if (disLiked) return;
 
@@ -107,32 +113,36 @@ const VideoPlayer = ({}) => {
     }
   };
 
+  // Fetch video and comment data
   useEffect(() => {
     axios.get(`http://localhost:5000/api/videos/${id}`).then((res) => {
-      setVideo(res.data);
-      setComments(res.data.comments);
-      setChannelId(res.data.channelId);
-      setVideoDescription(res.data.videoDescription);
+      setVideo(res?.data);
+      setComments(res?.data?.comments);
+      setChannelId(res?.data?.channelId);
+      setVideoDescription(res?.data?.videoDescription);
       // console.log(res.data);
     });
   }, [id]);
 
+  // Fetch channel details if channelId exists
   useEffect(() => {
     {
       channelId &&
         axios
           .get(`http://localhost:5000/api/channels/${channelId}`)
           .then((res) => {
-            setChannelName(res.data.channelName);
-            setChannelThumbnail(res.data.channelBanner);
+            setChannelName(res?.data?.channelName);
+            setChannelThumbnail(res?.data?.channelBanner);
           });
     }
   });
 
+  // Add new comment
   const handleNewComment = (comment) => {
     setComments((prev) => [...prev, comment]);
   };
 
+  // Delete comment
   const handleDeleteComment = async (commentId) => {
     const token = localStorage.getItem("token");
     try {
@@ -147,6 +157,7 @@ const VideoPlayer = ({}) => {
     }
   };
 
+  // Decode user ID from token
   const token = localStorage.getItem("token");
   let userId = null;
   if (token) {
@@ -170,7 +181,7 @@ const VideoPlayer = ({}) => {
       );
       setComments((prev) =>
         prev.map((c) =>
-          c._id === commentId ? { ...c, text: res.data.comment.text } : c
+          c?._id === commentId ? { ...c, text: res?.data?.comment?.text } : c
         )
       );
 
@@ -182,6 +193,7 @@ const VideoPlayer = ({}) => {
     }
   };
 
+  // Toggle like/dislike states
   const handleLikeChange = () => {
     setLiked(!liked);
     handleLike();
@@ -203,9 +215,9 @@ const VideoPlayer = ({}) => {
           <video
             className={`rounded-lg p-0 w-screen`}
             controls
-            src={`http://localhost:5000${video.videoUrl}`}
+            src={`http://localhost:5000${video?.videoUrl}`}
           />
-          <h2 className="text-xl font-bold mt-2">{video.title}</h2>
+          <h2 className="text-xl font-bold mt-2">{video?.title}</h2>
           <div className="flex flex-wrap gap-2 my-4">
             <div className="flex gap-2">
               <img
@@ -221,6 +233,7 @@ const VideoPlayer = ({}) => {
                 <button>Subscribe</button>
               </div>
             </div>
+            {/* Like/Dislike/Share/Download */}
             <div className="flex gap-2 mx-auto">
               <div className="flex ">
                 <span
@@ -238,7 +251,7 @@ const VideoPlayer = ({}) => {
                       handleLike();
                     }}
                   />
-                  <span className="text-sm md:text-lg">{video.likes}</span>
+                  <span className="text-sm md:text-lg">{video?.likes}</span>
                 </span>
                 <span
                   className=" px-2 sm:px-4 flex items-center my-2 rounded-r-lg justify-center gap-1 bg-neutral-200"
@@ -255,7 +268,7 @@ const VideoPlayer = ({}) => {
                       handleDislike();
                     }}
                   />
-                  <span className="text-sm md:text-lg">{video.dislikes}</span>
+                  <span className="text-sm md:text-lg">{video?.dislikes}</span>
                 </span>
               </div>
               <div className="flex gap-2">
@@ -270,14 +283,14 @@ const VideoPlayer = ({}) => {
               </div>
             </div>
           </div>
-          <div className={` `}>
+          <div>
             <div className="bg-neutral-200 p-2 rounded-lg">
               <p className="flex gap-2 text-sm font-semibold">
                 <span>379,650 views</span>
                 <span>11 May 2023</span>
               </p>
               <div className="flex flex-col">
-                {videoDescription && <p>{videoDescription.slice(0, 275)}</p>}
+                {videoDescription && <p>{videoDescription?.slice(0, 275)}</p>}
               </div>
             </div>
             <CommentBox
@@ -288,7 +301,6 @@ const VideoPlayer = ({}) => {
 
             <div className="mt-4 space-y-4">
               {comments.map((c) => {
-                // console.log("[c]", c.userId._id);
                 return (
                   <div
                     key={c._id}
@@ -296,14 +308,18 @@ const VideoPlayer = ({}) => {
                   >
                     <div className="flex justify-between">
                       <div>
-                        <div className="flex gap-10 items-center">
-                          <p>@{c.userId.username}</p>
+                        <div className="flex items-center mb-2">
+                          <span className="w-8 h-8 flex items-center justify-center text-white bg-purple-600 rounded-full">
+                            {c?.userId?.username[0]?.toUpperCase()}
+                          </span>
+                          <p className="mr-10 ml-2">@{c?.userId?.username}</p>
+
                           <small className="text-xs hidden sm:block">
-                            {new Date(c.timestamp).toLocaleString()}
+                            {new Date(c?.timestamp).toLocaleString()}
                           </small>
                         </div>
-
-                        {editingCommentId === c._id ? (
+                        {/* Edit input or comment text */}
+                        {editingCommentId === c?._id ? (
                           <div className="flex flex-wrap gap-2 mt-2">
                             <input
                               type="text"
@@ -312,7 +328,7 @@ const VideoPlayer = ({}) => {
                               className="border p-1 rounded w-auto"
                             />
                             <button
-                              onClick={() => handleSaveEdit(c._id)}
+                              onClick={() => handleSaveEdit(c?._id)}
                               className="text-blue-600 text-sm"
                             >
                               Save
@@ -325,21 +341,22 @@ const VideoPlayer = ({}) => {
                             </button>
                           </div>
                         ) : (
-                          <p>{c.text}</p>
+                          <p>{c?.text}</p>
                         )}
                       </div>
-                      {user._id == c.userId._id ? (
+                      {/* Delete/Edit comment (if user is owner) */}
+                      {user?._id == c?.userId?._id ? (
                         <div>
                           <button
-                            onClick={() => handleDeleteComment(c._id)}
+                            onClick={() => handleDeleteComment(c?._id)}
                             className="text-red-400 text-sm ml-2"
                           >
                             <Trash2 />
                           </button>
                           <button
                             onClick={() => {
-                              setEditingCommentId(c._id);
-                              setEditedText(c.text);
+                              setEditingCommentId(c?._id);
+                              setEditedText(c?.text);
                             }}
                             className="text-neutral-700 text-sm ml-2"
                           >
@@ -354,24 +371,24 @@ const VideoPlayer = ({}) => {
                     <div className="flex gap-2">
                       <ThumbsUp
                         className={`w-5 cursor-pointer ${
-                          likedComments[c._id] ? "fill-black" : ""
+                          likedComments[c?._id] ? "fill-black" : ""
                         }`}
                         onClick={() =>
                           setLikedComments((prev) => ({
                             ...prev,
-                            [c._id]: !prev[c._id],
+                            [c?._id]: !prev[c?._id],
                           }))
                         }
                       />
 
                       <ThumbsDown
                         className={`w-5 cursor-pointer ${
-                          dislikedComments[c._id] ? "fill-black" : ""
+                          dislikedComments[c?._id] ? "fill-black" : ""
                         }`}
                         onClick={() =>
                           setDislikedComments((prev) => ({
                             ...prev,
-                            [c._id]: !prev[c._id],
+                            [c?._id]: !prev[c?._id],
                           }))
                         }
                       />
@@ -383,6 +400,7 @@ const VideoPlayer = ({}) => {
           </div>
         </div>
       </div>
+      {/* Right Section: Suggestions */}
       <div className=" mt-4 mx-auto">
         <DummySuggession></DummySuggession>
       </div>

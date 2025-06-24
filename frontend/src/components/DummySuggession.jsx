@@ -1,5 +1,7 @@
-import React from "react";
+// Import necessary dependencies
 import { Dot } from "lucide-react";
+
+// Dummy data array containing video suggestions
 
 const dummyData = [
   {
@@ -58,28 +60,38 @@ const dummyData = [
 const DummySuggession = () => {
   return (
     <>
+      {/* Responsive grid layout for suggestions */}
       <section className="grid grid-cols-1 gap-4 lg:grid-cols-2 xl:grid-cols-1">
         {dummyData.map((item, index) => {
+          // Rendering each suggestion as an article
           return (
             <article className="flex flex-col sm:flex-row" key={index}>
+              {/* Thumbnail image */}
               <img
                 className="w-[17rem] h-[6rem] mr-2 rounded-lg"
                 src={item.thumbnail}
-                alt=""
+                alt={item.title}
               />
+
+              {/* Video details */}
               <div className="text-sm">
+                {/* Display title with ellipsis if too long */}
                 {item.title.length > 52 ? (
-                  <p className="mb-1">{item.title.slice(0, 45)}...</p>
+                  <p className="mb-1">{item?.title.slice(0, 45)}...</p>
                 ) : (
-                  <p className="mb-1">{item.title}</p>
+                  <p className="mb-1">{item?.title}</p>
                 )}
+
+                {/* Channel name */}
                 <p className="mb-1 text-neutral-600 hover:text-neutral-800 duration-300 cursor-pointer">
-                  {item.channelName}
+                  {item?.channelName}
                 </p>
+
+                {/* Views and uploaded time */}
                 <div className="flex">
                   <span className="text-neutral-600">{item.views} Views</span>
                   <span>
-                    <Dot className="text-neutral-600"></Dot>
+                    <Dot className="text-neutral-600" />
                   </span>
                   <span className="text-neutral-600">{item.uploaded} ago</span>
                 </div>

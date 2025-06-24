@@ -9,15 +9,15 @@ const CreateChannel = () => {
     channelName: "",
     description: "",
     channelBanner: "",
-  });
+  }); // Form state
 
   const [message, setMessage] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false); // Upload state
   const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
+    setForm((prev) => ({ ...prev, [name]: value })); // Handle form input change
   };
 
   const handleBannerUpload = async (e) => {
@@ -26,7 +26,7 @@ const CreateChannel = () => {
 
     const cloudForm = new FormData();
     cloudForm.append("file", file);
-    cloudForm.append("upload_preset", "oxqufdxz");
+    cloudForm.append("upload_preset", "oxqufdxz"); // Cloudinary preset
 
     try {
       setLoading(true);
@@ -38,7 +38,7 @@ const CreateChannel = () => {
         }
       );
       const data = await res.json();
-      setForm((prev) => ({ ...prev, channelBanner: data.secure_url }));
+      setForm((prev) => ({ ...prev, channelBanner: data.secure_url })); // Set banner URL
       toast.success("Banner uploaded");
     } catch (err) {
       console.error("Banner upload failed:", err);
@@ -61,8 +61,8 @@ const CreateChannel = () => {
         },
       });
       toast.success("Channel created!");
-      navigate("/my-channel");
-      window.location.reload();
+      navigate("/my-channel"); // Redirect to channel
+      window.location.reload(); // Refresh page
     } catch (err) {
       toast.error("Failed to create channel");
       setMessage(err.response?.data?.message || "Failed to create channel");
@@ -89,7 +89,7 @@ const CreateChannel = () => {
           <input
             type="file"
             accept="image/*"
-            onChange={handleBannerUpload}
+            onChange={handleBannerUpload} // Upload banner to Cloudinary
             className="flex mx-auto"
           />
         </div>
@@ -116,7 +116,7 @@ const CreateChannel = () => {
           disabled={loading}
           className="bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition"
         >
-          {loading ? "uploading..." : "Create Channel"}
+          {loading ? "uploading..." : "Create Channel"} {/* Submit button */}
         </button>
       </form>
     </div>

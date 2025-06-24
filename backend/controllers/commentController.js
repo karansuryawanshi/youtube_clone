@@ -1,6 +1,7 @@
 import Comment from "../models/Comment.js";
 import Video from "../models/Video.js";
 
+// Add comment to a video
 export const addComment = async (req, res) => {
   const { text } = req.body;
   const { id: videoId } = req.params;
@@ -13,10 +14,10 @@ export const addComment = async (req, res) => {
     });
 
     await Video.findByIdAndUpdate(videoId, {
-      $push: { comments: comment._id },
+      $push: { comments: comment._id }, // Add comment reference to video
     });
 
-    const populatedComment = await comment.populate("userId", "username");
+    const populatedComment = await comment.populate("userId", "username"); // Populate username
 
     res.status(201).json(populatedComment);
   } catch (err) {
@@ -24,6 +25,7 @@ export const addComment = async (req, res) => {
   }
 };
 
+// Edit user's own comment
 export const editComment = async (req, res) => {
   const commentId = req.params.id;
   const { text } = req.body;
@@ -42,7 +44,7 @@ export const editComment = async (req, res) => {
         .json({ message: "Not authorized to edit this comment" });
     }
 
-    comment.text = text;
+    comment.text = text; // Update text
     await comment.save();
 
     res.status(200).json({ message: "Comment updated", comment });
@@ -52,6 +54,7 @@ export const editComment = async (req, res) => {
   }
 };
 
+// Delete user's own comment
 export const deleteComment = async (req, res) => {
   const { commentId } = req.params;
 
@@ -60,7 +63,7 @@ export const deleteComment = async (req, res) => {
     if (comment.userId.toString() !== req.user.id)
       return res.status(403).json({ message: "Not allowed" });
 
-    await Comment.findByIdAndDelete(commentId);
+    await Comment.findByIdAndDelete(commentId); // Delete comment
     res.json({ message: "Comment deleted" });
   } catch (err) {
     res.status(500).json({ message: "Error deleting comment" });

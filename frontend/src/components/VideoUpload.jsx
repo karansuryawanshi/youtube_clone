@@ -3,6 +3,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 
 const VideoUpload = ({ onClose, fetchMyVideos }) => {
+  // Form state
   const [formData, setFormData] = useState({
     title: "",
     category: "",
@@ -10,10 +11,14 @@ const VideoUpload = ({ onClose, fetchMyVideos }) => {
     video: null,
   });
 
+  // Thumbnail image state
   const [imageUrl, setImageUrl] = useState("");
+
+  // Feedback & loading states
   const [uploadMessage, setUploadMessage] = useState("");
   const [loading, setLoading] = useState(false);
 
+  // Handle form field changes
   const handleChange = (e) => {
     const { name, value, files } = e.target;
     setFormData((prev) => ({
@@ -22,6 +27,7 @@ const VideoUpload = ({ onClose, fetchMyVideos }) => {
     }));
   };
 
+  // Upload thumbnail to Cloudinary
   const handleImageUpload = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -51,6 +57,7 @@ const VideoUpload = ({ onClose, fetchMyVideos }) => {
     }
   };
 
+  // Handle full form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     setUploadMessage("");
@@ -58,6 +65,7 @@ const VideoUpload = ({ onClose, fetchMyVideos }) => {
     const token = localStorage.getItem("token");
     if (!token) return setUploadMessage("⚠️ Please login to upload.");
 
+    // Field validation
     if (
       !formData.title ||
       !formData.category ||
@@ -68,6 +76,7 @@ const VideoUpload = ({ onClose, fetchMyVideos }) => {
       return setUploadMessage("⚠️ All fields are required.");
     }
 
+    // Prepare form data for backend
     const data = new FormData();
     data.append("title", formData.title);
     data.append("category", formData.category.toLowerCase());
@@ -88,13 +97,15 @@ const VideoUpload = ({ onClose, fetchMyVideos }) => {
         }
       );
 
+      // On success
       setUploadMessage("Video uploaded successfully!");
       toast.success("Video uploaded successfully!");
       setFormData({ title: "", category: "", description: "", video: null });
       setImageUrl("");
-      fetchMyVideos();
-      onClose();
+      fetchMyVideos(); // Refresh list
+      onClose(); // Close modal
     } catch (err) {
+      // On error
       toast.error("Video upload failed");
       console.error("Video upload failed", err);
       onClose();
@@ -107,6 +118,7 @@ const VideoUpload = ({ onClose, fetchMyVideos }) => {
   return (
     <div className="p-4 rounded w-full max-w-xl mx-auto">
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+        {/* Title & Category */}
         <div className="flex gap-6 flex-wrap sm:flex-nowrap">
           <input
             type="text"
@@ -128,6 +140,8 @@ const VideoUpload = ({ onClose, fetchMyVideos }) => {
             required
           />
         </div>
+
+        {/* Description */}
         <textarea
           name="description"
           placeholder="Description"
@@ -138,6 +152,7 @@ const VideoUpload = ({ onClose, fetchMyVideos }) => {
           className="border p-2 rounded"
         />
 
+        {/* Thumbnail Upload */}
         <div className="flex flex-col gap-2">
           <label className="text-sm font-medium">Thumbnail Image</label>
           <input
@@ -155,6 +170,7 @@ const VideoUpload = ({ onClose, fetchMyVideos }) => {
           )}
         </div>
 
+        {/* Video Upload */}
         <div className="flex flex-col gap-2">
           <label className="text-sm font-medium">Video File</label>
           <input
@@ -167,6 +183,7 @@ const VideoUpload = ({ onClose, fetchMyVideos }) => {
           />
         </div>
 
+        {/* Submit & Cancel Buttons */}
         <button
           type="submit"
           disabled={loading}

@@ -1,6 +1,7 @@
 import Video from "../models/Video.js";
 import Channel from "../models/Channel.js";
 
+// Create and upload a new video
 export const createVideo = async (req, res) => {
   const { title, thumbnailUrl, category, videoDescription } = req.body;
 
@@ -26,7 +27,7 @@ export const createVideo = async (req, res) => {
       uploadDate: new Date(),
     });
 
-    const saved = await newVideo.save();
+    const saved = await newVideo.save(); // Add video to channel
     channel.videos.push(saved._id);
     await channel.save();
 
@@ -36,6 +37,7 @@ export const createVideo = async (req, res) => {
   }
 };
 
+// Get videos with optional search and category filters
 export const getVideos = async (req, res) => {
   const { search, category } = req.query;
 
@@ -54,6 +56,7 @@ export const getVideos = async (req, res) => {
   }
 };
 
+// Get video by ID with comments and uploader details
 export const getVideoById = async (req, res) => {
   try {
     const video = await Video.findById(req.params.id)
@@ -73,6 +76,7 @@ export const getVideoById = async (req, res) => {
   }
 };
 
+// Increment like count
 export const likeVideo = async (req, res) => {
   const video = await Video.findById(req.params.id);
   video.likes += 1;
@@ -80,6 +84,7 @@ export const likeVideo = async (req, res) => {
   res.json({ likes: video.likes });
 };
 
+// Increment dislike count
 export const dislikeVideo = async (req, res) => {
   const video = await Video.findById(req.params.id);
   video.dislikes += 1;
@@ -87,6 +92,7 @@ export const dislikeVideo = async (req, res) => {
   res.json({ dislikes: video.dislikes });
 };
 
+// Get all videos uploaded by logged-in user
 export const getUserVideos = async (req, res) => {
   try {
     const videos = await Video.find({ uploader: req.user.id });
@@ -97,6 +103,7 @@ export const getUserVideos = async (req, res) => {
   }
 };
 
+// Delete video if it belongs to the user's channel
 export const deleteVideo = async (req, res) => {
   try {
     const video = await Video.findById(req.params.id);
@@ -114,6 +121,7 @@ export const deleteVideo = async (req, res) => {
   }
 };
 
+// Update video if it belongs to the user
 export const updateVideo = async (req, res) => {
   const { id } = req.params;
   const { title, thumbnailUrl, category, videoDescription } = req.body;

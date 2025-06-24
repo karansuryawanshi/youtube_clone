@@ -7,9 +7,9 @@ import { editMyChannel } from "../controllers/channelController.js";
 
 const router = express.Router();
 
-router.get("/:id", getChannelById);
-router.post("/", verifyToken, createChannel);
-router.get("/my/channel", verifyToken, getMyChannel);
-router.put("/my/channel", verifyToken, editMyChannel);
+router.get("/:id", getChannelById); // Get channel by ID
+router.post("/", verifyToken, createChannel); // Create a new channel
+router.get("/my/channel", verifyToken, getMyChannel); // Get current user's channel
+router.put("/my/channel", verifyToken, editMyChannel); // Update current user's channel
 
 export default router;
