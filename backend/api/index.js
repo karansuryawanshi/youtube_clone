@@ -1,5 +1,5 @@
-// backend/api/index.js
 import serverless from "serverless-http";
 import app from "../server.js";
 
-export const handler = serverless(app);
+// This must be the default export for Vercel
+export default serverless(app);
