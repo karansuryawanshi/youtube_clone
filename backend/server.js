@@ -23,7 +23,7 @@ app.use("/api/comments", commentRoutes);
 app.use("/api/channels", channelRoutes);
 
 // Connect to MongoDB and start server
-mongoose.connect("mongodb://localhost:27017/youtube_clone").then(() => {
+mongoose.connect(process.env.MONGODB_URI).then(() => {
   console.log("Database connected");
 });
 
