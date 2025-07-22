@@ -1,3 +1,5 @@
+// https://github.com/karansuryawanshi/youtube_clone
+
 import jwt from "jsonwebtoken";
 
 // Middleware to verify JWT token

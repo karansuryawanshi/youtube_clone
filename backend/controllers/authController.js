@@ -1,3 +1,5 @@
+// https://github.com/karansuryawanshi/youtube_clone
+
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import User from "../models/User.js";

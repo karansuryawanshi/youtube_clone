@@ -1,3 +1,5 @@
+// https://github.com/karansuryawanshi/youtube_clone
+
 // components/Loading.jsx
 const Loading = () => {
   return (

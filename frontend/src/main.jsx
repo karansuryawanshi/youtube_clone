@@ -1,3 +1,5 @@
+// https://github.com/karansuryawanshi/youtube_clone
+
 // Entry point with route definitions and lazy loading
 import { createRoot } from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";

@@ -1,3 +1,5 @@
+// https://github.com/karansuryawanshi/youtube_clone
+
 // Import necessary dependencies
 import { Dot } from "lucide-react";
 

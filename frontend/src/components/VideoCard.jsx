@@ -1,3 +1,5 @@
+// https://github.com/karansuryawanshi/youtube_clone
+
 import { Link } from "react-router-dom";
 
 const VideoCard = ({ video }) => (

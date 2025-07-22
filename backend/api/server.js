@@ -1,11 +1,13 @@
+// https://github.com/karansuryawanshi/youtube_clone
+
 // Import necessary modules
 import express from "express";
 import mongoose from "mongoose";
-import authRoutes from "./routes/authRoutes.js";
-import videoRoutes from "./routes/videoRoutes.js";
+import authRoutes from "../routes/authRoutes.js";
+import videoRoutes from "../routes/videoRoutes.js";
 import cors from "cors";
-import commentRoutes from "./routes/commentRoutes.js";
-import channelRoutes from "./routes/channelRoutes.js";
+import commentRoutes from "../routes/commentRoutes.js";
+import channelRoutes from "../routes/channelRoutes.js";
 
 const app = express();
 

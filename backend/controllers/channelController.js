@@ -1,3 +1,5 @@
+// https://github.com/karansuryawanshi/youtube_clone
+
 import Channel from "../models/Channel.js";
 
 // Get channel by ID

@@ -1,3 +1,5 @@
+// https://github.com/karansuryawanshi/youtube_clone
+
 import React, { useEffect, useState } from "react";
 import { User, Menu, Search, BadgePlus } from "lucide-react";
 import { useChannel } from "../context/ChannelContext";

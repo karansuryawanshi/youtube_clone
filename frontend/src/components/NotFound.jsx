@@ -1,4 +1,4 @@
-// https://github.com/karansuryawanshi/ShoppyGlobe-E-commerce
+// https://github.com/karansuryawanshi/youtube_clone
 
 import { Link } from "react-router-dom";
 import { useRouteError } from "react-router-dom";
