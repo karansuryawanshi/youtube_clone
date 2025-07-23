@@ -11,8 +11,8 @@ import dotenv from "dotenv";
 import cors from "cors";
 
 const app = express();
-
 dotenv.config();
+
 // app.use(cors());
 
 app.use(cors()); // Enable CORS
@@ -32,5 +32,9 @@ mongoose.connect(process.env.MONGODB_URI).then(() => {
 });
 
 // app.listen(5000, () => console.log("Server running on port 5000"));
+
+app.get("/", (req, res) => {
+  res.send("Hello from Node.js on Vercel!");
+});
 
 export default app;
