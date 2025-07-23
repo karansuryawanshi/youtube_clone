@@ -1,5 +1,5 @@
+// api/index.js
 import app from "../server.js";
+import { createServer } from "@vercel/node";
 
-export default async function handler(req, res) {
-  await app(req, res);
-}
+export default createServer(app);
