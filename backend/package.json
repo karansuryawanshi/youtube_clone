@@ -22,5 +22,8 @@
     "multer-storage-cloudinary": "^4.0.0",
     "nodemon": "^3.1.10",
     "serverless-http": "^3.2.0"
+  },
+  "devDependencies": {
+    "@vercel/node": "^5.3.6"
   }
 }
