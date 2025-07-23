@@ -34,10 +34,15 @@ app.use("/api/channels", channelRoutes);
 // });
 
 try {
-  await mongoose.connect(process.env.MONGODB_URI);
-  console.log("DB connected");
-} catch (err) {
-  console.error("MongoDB connection failed", err);
+  await mongoose.connect(process.env.MONGO_URI, {
+    dbName: "your-db-name",
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  });
+  console.log("✅ MongoDB connected");
+} catch (error) {
+  console.error("❌ MongoDB connection error:", error);
+  // process.exit(1);
 }
 
 // app.listen(5000, () => console.log("Server running on port 5000"));
