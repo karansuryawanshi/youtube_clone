@@ -27,9 +27,16 @@ app.use("/api/comments", commentRoutes);
 app.use("/api/channels", channelRoutes);
 
 // Connect to MongoDB and start server
-mongoose.connect(process.env.MONGODB_URI).then(() => {
-  console.log("Database connected");
-});
+// mongoose.connect(process.env.MONGODB_URI).then(() => {
+//   console.log("Database connected");
+// });
+
+try {
+  await mongoose.connect(process.env.MONGODB_URI);
+  console.log("DB connected");
+} catch (err) {
+  console.error("MongoDB connection failed", err);
+}
 
 // app.listen(5000, () => console.log("Server running on port 5000"));
 
