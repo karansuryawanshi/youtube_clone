@@ -13,6 +13,8 @@ import cors from "cors";
 const app = express();
 dotenv.config();
 
+const PORT = process.env.PORT || 5000;
+
 // app.use(cors());
 
 app.use(cors()); // Enable CORS
@@ -44,4 +46,8 @@ app.get("/", (req, res) => {
   res.send("Hello from Node.js on Vercel!");
 });
 
-export default app;
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
+
+// export default app;
