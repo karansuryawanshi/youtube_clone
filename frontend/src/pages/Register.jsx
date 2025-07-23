@@ -45,11 +45,14 @@ const Register = () => {
 
     // Send POST request to register user
     try {
-      const res = await axios.post("http://localhost:5000/api/auth/register", {
-        username,
-        email,
-        password,
-      });
+      const res = await axios.post(
+        "https://youtube-clone-green-mu-64.vercel.app/api/auth/register",
+        {
+          username,
+          email,
+          password,
+        }
+      );
 
       // Set success state and clear form
       setSuccess("Registration successful!");
@@ -143,7 +146,7 @@ const Register = () => {
               {/* Submit button */}
               <button
                 type="submit"
-                className="mt-2 px-4 py-2 bg-blue-600 text-white rounded"
+                className="mt-2 px-4 py-2 bg-blue-600 text-white rounded cursor-pointer"
               >
                 Submit
               </button>
