@@ -44,7 +44,7 @@ const VideoPlayer = ({}) => {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:5000/api/videos/${id}`)
+      .get(`https://youtube-clone-phfd.onrender.com/api/videos/${id}`)
       .then((res) => setVideo(res?.data))
       .catch((err) => console.log(err));
   }, [id]);
@@ -57,7 +57,7 @@ const VideoPlayer = ({}) => {
 
     try {
       await axios.put(
-        `http://localhost:5000/api/videos/${id}/like`,
+        `https://youtube-clone-phfd.onrender.com/api/videos/${id}/like`,
         {},
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -90,7 +90,7 @@ const VideoPlayer = ({}) => {
 
     try {
       await axios.put(
-        `http://localhost:5000/api/videos/${id}/dislike`,
+        `https://youtube-clone-phfd.onrender.com/api/videos/${id}/dislike`,
         {},
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -117,13 +117,15 @@ const VideoPlayer = ({}) => {
 
   // Fetch video and comment data
   useEffect(() => {
-    axios.get(`http://localhost:5000/api/videos/${id}`).then((res) => {
-      setVideo(res?.data);
-      setComments(res?.data?.comments);
-      setChannelId(res?.data?.channelId);
-      setVideoDescription(res?.data?.videoDescription);
-      // console.log(res.data);
-    });
+    axios
+      .get(`https://youtube-clone-phfd.onrender.com/api/videos/${id}`)
+      .then((res) => {
+        setVideo(res?.data);
+        setComments(res?.data?.comments);
+        setChannelId(res?.data?.channelId);
+        setVideoDescription(res?.data?.videoDescription);
+        // console.log(res.data);
+      });
   }, [id]);
 
   // Fetch channel details if channelId exists
@@ -131,7 +133,9 @@ const VideoPlayer = ({}) => {
     {
       channelId &&
         axios
-          .get(`http://localhost:5000/api/channels/${channelId}`)
+          .get(
+            `https://youtube-clone-phfd.onrender.com/api/channels/${channelId}`
+          )
           .then((res) => {
             setChannelName(res?.data?.channelName);
             setChannelThumbnail(res?.data?.channelBanner);
@@ -148,9 +152,12 @@ const VideoPlayer = ({}) => {
   const handleDeleteComment = async (commentId) => {
     const token = localStorage.getItem("token");
     try {
-      await axios.delete(`http://localhost:5000/api/comments/${commentId}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      await axios.delete(
+        `https://youtube-clone-phfd.onrender.com/api/comments/${commentId}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
       setComments((prev) => prev.filter((c) => c._id !== commentId));
       toast.error("Comment Deleted");
     } catch (err) {
@@ -173,7 +180,7 @@ const VideoPlayer = ({}) => {
 
     try {
       const res = await axios.put(
-        `http://localhost:5000/api/comments/${commentId}`,
+        `https://youtube-clone-phfd.onrender.com/api/comments/${commentId}`,
         { text: editedText },
         {
           headers: {

@@ -39,12 +39,15 @@ const Home = () => {
 
       try {
         // Fetch videos from backend with optional search and category filter
-        const res = await axios.get("http://localhost:5000/api/videos", {
-          params: {
-            search,
-            category: categoryQuery,
-          },
-        });
+        const res = await axios.get(
+          "https://youtube-clone-phfd.onrender.com/api/videos",
+          {
+            params: {
+              search,
+              category: categoryQuery,
+            },
+          }
+        );
         setVideos(res.data); // Set videos in state
       } catch (err) {
         console.error("Error fetching videos", err);

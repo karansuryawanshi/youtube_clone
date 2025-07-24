@@ -37,7 +37,7 @@ const MyChannel = () => {
     try {
       setLoading(true);
       await axios.put(
-        "http://localhost:5000/api/channels/my/channel",
+        "https://youtube-clone-phfd.onrender.com/api/channels/my/channel",
         editForm,
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -57,7 +57,7 @@ const MyChannel = () => {
   const fetchMyVideos = async () => {
     const token = localStorage.getItem("token");
     const res = await axios.get(
-      "http://localhost:5000/api/channels/my/channel",
+      "https://youtube-clone-phfd.onrender.com/api/channels/my/channel",
       {
         headers: { Authorization: `Bearer ${token}` },
       }
@@ -82,11 +82,14 @@ const MyChannel = () => {
   const handleDelete = async (videoId) => {
     const token = localStorage.getItem("token");
     try {
-      await axios.delete(`http://localhost:5000/api/videos/${videoId}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      await axios.delete(
+        `https://youtube-clone-phfd.onrender.com/api/videos/${videoId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       toast.error("Video Deleted!");
       fetchMyVideos(); // refresh videos
     } catch (err) {

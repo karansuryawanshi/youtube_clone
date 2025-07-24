@@ -25,9 +25,12 @@ export const UserProvider = ({ children }) => {
       const decoded = jwtDecode(token);
 
       // Fetch user info from server using the token
-      const res = await axios.get("http://localhost:5000/api/auth/me", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const res = await axios.get(
+        "https://youtube-clone-phfd.onrender.com/api/auth/me",
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
 
       // Set user data in state
       setUser(res.data);

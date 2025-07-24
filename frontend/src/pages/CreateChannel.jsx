@@ -57,11 +57,15 @@ const CreateChannel = () => {
     if (!token) return setMessage("⚠️ You must be logged in.");
 
     try {
-      const res = await axios.post("http://localhost:5000/api/channels", form, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const res = await axios.post(
+        "https://youtube-clone-phfd.onrender.com/api/channels",
+        form,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       toast.success("Channel created!");
       navigate("/my-channel"); // Redirect to channel
       window.location.reload(); // Refresh page

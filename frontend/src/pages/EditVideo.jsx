@@ -25,7 +25,9 @@ const EditVideo = () => {
   useEffect(() => {
     const fetchVideo = async () => {
       try {
-        const res = await axios.get(`http://localhost:5000/api/videos/${id}`);
+        const res = await axios.get(
+          `https://youtube-clone-phfd.onrender.com/api/videos/${id}`
+        );
         setVideo(res.data); // Set video data
         setLoading(false);
       } catch (err) {
@@ -85,12 +87,16 @@ const EditVideo = () => {
     }
 
     try {
-      await axios.put(`http://localhost:5000/api/videos/edit/${id}`, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      await axios.put(
+        `https://youtube-clone-phfd.onrender.com/api/videos/edit/${id}`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       toast.success("Video Updated Successfully");
       navigate("/my-channel"); // Navigate after update
     } catch (err) {

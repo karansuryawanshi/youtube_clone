@@ -19,12 +19,15 @@ const ChannelProvider = ({ children }) => {
 
     try {
       // Make authenticated GET request to fetch channel info
-      const res = await fetch("http://localhost:5000/api/channels/my/channel", {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const res = await fetch(
+        "https://youtube-clone-phfd.onrender.com/api/channels/my/channel",
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       const data = await res.json(); // Parse JSON response
       setChannel(data); // Update channel state

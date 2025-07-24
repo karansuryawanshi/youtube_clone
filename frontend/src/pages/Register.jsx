@@ -46,7 +46,7 @@ const Register = () => {
     // Send POST request to register user
     try {
       const res = await axios.post(
-        "https://youtube-clone-green-mu-64.vercel.app/api/auth/register",
+        "https://youtube-clone-phfd.onrender.com/api/auth/register",
         {
           username,
           email,

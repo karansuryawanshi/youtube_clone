@@ -30,7 +30,7 @@ const Login = () => {
     try {
       // Send login request to backend
       const res = await axios.post(
-        "http://localhost:5000/api/auth/login",
+        "https://youtube-clone-phfd.onrender.com/api/auth/login",
         formData
       );
       const { token } = res.data;

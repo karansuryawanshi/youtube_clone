@@ -15,7 +15,7 @@ const CommentBox = ({ videoId, onCommentAdded, commentDetails }) => {
 
     // Make POST request to backend with the comment text
     const res = await axios.post(
-      `http://localhost:5000/api/comments/${videoId}`,
+      `https://youtube-clone-phfd.onrender.com/api/comments/${videoId}`,
       { text },
       {
         headers: { Authorization: `Bearer ${token}` }, // Send token in headers
