@@ -23,6 +23,16 @@ app.use("/uploads", express.static("uploads")); // Serve uploaded files
 
 app.use(express.urlencoded({ extended: true }));
 
+try {
+  await mongoose.connect(process.env.MONGO_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  });
+  console.log("✅ MongoDB connected");
+} catch (error) {
+  console.error("❌ MongoDB connection error:", error);
+}
+
 app.use("/api/auth", authRoutes);
 app.use("/api/videos", videoRoutes);
 app.use("/api/comments", commentRoutes);
@@ -31,19 +41,7 @@ app.use("/api/channels", channelRoutes);
 // Connect to MongoDB and start server
 // mongoose.connect(process.env.MONGODB_URI).then(() => {
 //   console.log("Database connected");
-// });
-
-try {
-  await mongoose.connect(process.env.MONGO_URI, {
-    dbName: "your-db-name",
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  });
-  console.log("✅ MongoDB connected");
-} catch (error) {
-  console.error("❌ MongoDB connection error:", error);
-  // process.exit(1);
-}
+// })
 
 // app.listen(5000, () => console.log("Server running on port 5000"));
 
