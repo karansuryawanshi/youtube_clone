@@ -53,7 +53,7 @@ const Login = () => {
       <Navbar />
 
       {/* Centered login form */}
-      <div className="flex items-center justify-center my-8">
+      <div className="flex flex-col items-center justify-center my-8">
         <form
           onSubmit={handleSubmit}
           className="flex flex-col gap-4 rounded-lg"
@@ -104,6 +104,15 @@ const Login = () => {
             </Link>
           </span>
         </form>
+        <div className="text-neutral-600 mt-4">
+          <p className="text-neutral-800 mt-4">trial email and password</p>
+          <p>
+            <span>Email</span> : <span>test@gmail.com</span>
+          </p>
+          <p>
+            <span>Password</span> : <span>Test@123</span>
+          </p>
+        </div>
       </div>
     </>
   );
