@@ -224,7 +224,7 @@ const VideoPlayer = ({}) => {
           <video
             className={`rounded-lg p-0 w-screen`}
             controls
-            src={`http://localhost:5000${video?.videoUrl}`}
+            src={`https://youtube-clone-phfd.onrender.com/${video?.videoUrl}`}
           />
           <h2 className="text-xl font-bold mt-2">{video?.title}</h2>
           <div className="flex flex-wrap gap-2 my-4">
